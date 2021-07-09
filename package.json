@@ -1,0 +1,25 @@
+{
+  "name": "diycollections_server",
+  "version": "1.0.0",
+  "description": "MYSQL server for diycollections",
+  "scripts": {
+    "start": "node ./server.js",
+    "start:dev": "nodemon ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarryllRobinson/diycollections_server.git"
+  },
+  "keywords": [
+    "mysql",
+    "node",
+    "express",
+    "diycollections"
+  ],
+  "author": "Darryll Robinson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DarryllRobinson/diycollections_server/issues"
+  },
+  "homepage": "https://github.com/DarryllRobinson/diycollections_server#readme"
+}
