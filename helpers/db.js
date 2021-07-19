@@ -24,11 +24,30 @@ async function initialize() {
 
   // init models and add them to the exported db object
   db.Account = require('../accounts/account.model')(sequelize);
-  db.RefreshToken = require('../accounts/refresh-token.model')(sequelize);
+  db.Case = require('../cases/case.model')(sequelize);
+  db.Contact = require('../contacts/contact.model')(sequelize);
+  db.Customer = require('../customers/customer.model')(sequelize);
+  db.Outcome = require('../outcomes/outcome.model')(sequelize);
+  db.User = require('../users/user.model')(sequelize);
+  db.RefreshToken = require('../users/refresh-token.model')(sequelize);
 
   // define relationships
-  db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
-  db.RefreshToken.belongsTo(db.Account);
+  // add relationships for customers, accounts, contacts, cases and outcomes
+  db.Customer.hasMany(db.Account, { onDelete: 'CASCADE' });
+
+  db.Account.belongsTo(db.Customer);
+  db.Account.hasMany(db.Case, { onDelete: 'CASCADE' });
+  db.Account.hasOne(db.Contact, { onDelete: 'CASCADE' });
+
+  db.Contact.belongsTo(db.Account);
+
+  db.Case.belongsTo(db.Account);
+  db.Case.hasMany(db.Outcome, { onDelete: 'CASCADE' });
+
+  db.Outcome.belongsTo(db.Case);
+
+  db.User.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
+  db.RefreshToken.belongsTo(db.User);
 
   // sync all models with database
   await sequelize.sync();

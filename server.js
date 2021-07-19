@@ -19,10 +19,21 @@ app.use(
 );
 
 // api routes
-app.use('/accounts', require('./accounts/accounts.controller'));
+app.use('/api/accounts', require('./accounts/accounts.controller'));
+app.use('/api/cases', require('./cases/cases.controller'));
+app.use('/api/contacts', require('./contacts/contacts.controller'));
+app.use('/api/customers', require('./customers/customers.controller'));
+app.use('/api/outcomes', require('./outcomes/outcomes.controller'));
+app.use('/api/queues', require('./queues/queues.controller'));
+
+// Report routes
+app.use('/api/reports/:report', require('./reports/reports.controller'));
+
+// User routes
+app.use('/api/users', require('./users/users.controller'));
 
 // swagger docs route
-app.use('/api-docs', require('helpers/swagger'));
+app.use('/api/api-docs', require('helpers/swagger'));
 
 // global error handler
 app.use(errorHandler);

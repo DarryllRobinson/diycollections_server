@@ -9,10 +9,10 @@ servers:
     description: Local development server
 
 paths:
-  /accounts/authenticate:
+  /users/authenticate:
     post:
-      summary: Authenticate account credentials and return a JWT token and a cookie with a refresh token
-      description: Accounts must be verified before authenticating.
+      summary: Authenticate user credentials and return a JWT token and a cookie with a refresh token
+      description: Users must be verified before authenticating.
       operationId: authenticate
       requestBody:
         required: true
@@ -32,7 +32,7 @@ paths:
                 - password
       responses:
         '200':
-          description: Account details, a JWT access token and a refresh token cookie
+          description: User details, a JWT access token and a refresh token cookie
           headers:
             Set-Cookie:
               description: '`refreshToken`'
@@ -84,7 +84,7 @@ paths:
                   message:
                     type: string
                     example: 'Email or password is incorrect'
-  /accounts/refresh-token:
+  /users/refresh-token:
     post:
       summary: Use a refresh token to generate a new JWT token and a new refresh token
       description: The refresh token is sent and returned via cookies.
@@ -98,7 +98,7 @@ paths:
             example: 51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550
       responses:
         '200':
-          description: Account details, a JWT access token and a new refresh token cookie
+          description: User details, a JWT access token and a new refresh token cookie
           headers:
             Set-Cookie:
               description: '`refreshToken`'
@@ -150,10 +150,10 @@ paths:
                   message:
                     type: string
                     example: 'Invalid token'
-  /accounts/revoke-token:
+  /users/revoke-token:
     post:
       summary: Revoke a refresh token
-      description: Admin users can revoke the tokens of any account, regular users can only revoke their own tokens.
+      description: Admin users can revoke the tokens of any user, regular users can only revoke their own tokens.
       operationId: revokeToken
       security:
         - bearerAuth: []
@@ -196,10 +196,10 @@ paths:
                     example: 'Invalid token'
         '401':
           $ref: '#/components/responses/UnauthorisedError'
-  /accounts/register:
+  /users/register:
     post:
-      summary: Register a new user account and send a verification email
-      description: The first account registered in the system is assigned the `Admin` role, other accounts are assigned the `User` role.
+      summary: Register a new user user and send a verification email
+      description: The first user registered in the system is assigned the `Admin` role, other users are assigned the `User` role.
       operationId: register
       requestBody:
         required: true
@@ -251,9 +251,9 @@ paths:
                   message:
                     type: string
                     example: 'Registration successful, please check your email for verification instructions'
-  /accounts/verify-email:
+  /users/verify-email:
     post:
-      summary: Verify a new account with a verification token received by email after registration
+      summary: Verify a new user with a verification token received by email after registration
       operationId: verifyEmail
       requestBody:
         required: true
@@ -269,7 +269,7 @@ paths:
                 - token
       responses:
         '200':
-          description: Verification was successful so you can now login to the account
+          description: Verification was successful so you can now login to the user
           content:
             application/json:
               schema:
@@ -288,9 +288,9 @@ paths:
                   message:
                     type: string
                     example: 'Verification failed'
-  /accounts/forgot-password:
+  /users/forgot-password:
     post:
-      summary: Submit email address to reset the password on an account
+      summary: Submit email address to reset the password on an user
       operationId: forgotPassword
       requestBody:
         required: true
@@ -306,7 +306,7 @@ paths:
                 - email
       responses:
         '200':
-          description: The request was received and an email has been sent to the specified address with password reset instructions (if the email address is associated with an account)
+          description: The request was received and an email has been sent to the specified address with password reset instructions (if the email address is associated with an user)
           content:
             application/json:
               schema:
@@ -315,9 +315,9 @@ paths:
                   message:
                     type: string
                     example: 'Please check your email for password reset instructions'
-  /accounts/validate-reset-token:
+  /users/validate-reset-token:
     post:
-      summary: Validate the reset password token received by email after submitting to the /accounts/forgot-password route
+      summary: Validate the reset password token received by email after submitting to the /users/forgot-password route
       operationId: validateResetToken
       requestBody:
         required: true
@@ -352,9 +352,9 @@ paths:
                   message:
                     type: string
                     example: 'Invalid token'
-  /accounts/reset-password:
+  /users/reset-password:
     post:
-      summary: Reset the password for an account
+      summary: Reset the password for an user
       operationId: resetPassword
       requestBody:
         required: true
@@ -378,7 +378,7 @@ paths:
                 - confirmPassword
       responses:
         '200':
-          description: Password reset was successful so you can now login to the account with the new password
+          description: Password reset was successful so you can now login to the user with the new password
           content:
             application/json:
               schema:
@@ -397,16 +397,16 @@ paths:
                   message:
                     type: string
                     example: 'Invalid token'
-  /accounts:
+  /users:
     get:
-      summary: Get a list of all accounts
+      summary: Get a list of all users
       description: Restricted to admin users.
-      operationId: getAllAccounts
+      operationId: getAllUsers
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: An array of all accounts
+          description: An array of all users
           content:
             application/json:
               schema:
@@ -444,9 +444,9 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorisedError'
     post:
-      summary: Create a new account
+      summary: Create a new user
       description: Restricted to admin users.
-      operationId: createAccount
+      operationId: createUser
       security:
         - bearerAuth: []
       requestBody:
@@ -491,7 +491,7 @@ paths:
                 - role
       responses:
         '200':
-          description: Account created successfully, verification is not required for accounts created with this endpoint. The details of the new account are returned.
+          description: User created successfully, verification is not required for users created with this endpoint. The details of the new user are returned.
           content:
             application/json:
               schema:
@@ -533,24 +533,24 @@ paths:
                     example: "Email 'mickey@example.com' is already registered"
         '401':
           $ref: '#/components/responses/UnauthorisedError'
-  /accounts/{id}:
+  /users/{id}:
     parameters:
       - in: path
         name: id
-        description: Account id
+        description: User id
         required: true
         example: '5eb12e197e06a76ccdefc121'
         schema:
           type: string
     get:
-      summary: Get a single account by id
-      description: Admin users can access any account, regular users are restricted to their own account.
-      operationId: getAccountById
+      summary: Get a single user by id
+      description: Admin users can access any user, regular users are restricted to their own user.
+      operationId: getUserById
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Details of the specified account
+          description: Details of the specified user
           content:
             application/json:
               schema:
@@ -588,9 +588,9 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorisedError'
     put:
-      summary: Update an account
-      description: Admin users can update any account including role, regular users are restricted to their own account and cannot update role.
-      operationId: updateAccount
+      summary: Update an user
+      description: Admin users can update any user including role, regular users are restricted to their own user and cannot update role.
+      operationId: updateUser
       security:
         - bearerAuth: []
       requestBody:
@@ -626,7 +626,7 @@ paths:
                   enum: [Admin, User]
       responses:
         '200':
-          description: Account updated successfully. The details of the updated account are returned.
+          description: User updated successfully. The details of the updated user are returned.
           content:
             application/json:
               schema:
@@ -664,8 +664,688 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorisedError'
     delete:
+      summary: Delete an user
+      description: Admin users can delete any user, regular users are restricted to their own user.
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User deleted successfully'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+
+  /accounts:
+    get:
+      summary: Get a list of all accounts
+      description: Retrieve list of all accounts.
+      operationId: getAllAccounts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: An array of all accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 123
+                    accountNumber:
+                      type: string
+                      example: 'AAA001'
+                    accountName:
+                      type: string
+                      example: 'Disney'
+                    openDate:
+                      type: string
+                      minLength: 8
+                      maxLength: 8
+                      format: date
+                      pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                      example: 20190816
+                      description: 'Date the account was opened.'
+                    debtorAge:
+                      type: integer
+                      example: 30
+                    paymentTermDays:
+                      type: integer
+                      example: 60
+                    creditLimit:
+                      type: integer
+                      example: 1500.00
+                    totalBalance:
+                      type: integer
+                      example: 1000.00
+                    amountDue:
+                      type: integer
+                      example: 1500.00
+                    currentBalance:
+                      type: integer
+                      example: 1000.00
+                    days30:
+                      type: integer
+                      example: 30.00
+                    days60:
+                      type: integer
+                      example: 60.00
+                    days90:
+                      type: integer
+                      example: 90.00
+                    days120:
+                      type: integer
+                      example: 120.00
+                    days150:
+                      type: integer
+                      example: 150.00
+                    days180:
+                      type: integer
+                      example: 180.00
+                    days180Over:
+                      type: integer
+                      example: 200.00
+                    paymentMethod:
+                      type: string
+                      example: 'EFT'
+                    paymentDueDate:
+                      type: integer
+                      example: 2
+                    debitOrderDate:
+                      type: integer
+                      example: 2
+                    lastPaymentDate:
+                      type: string
+                      minLength: 8
+                      maxLength: 8
+                      format: date
+                      pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                      example: 20190816
+                    lastPaymentAmount:
+                      type: integer
+                      example: 2016.00
+                    lastPTPDate:
+                      type: string
+                      minLength: 8
+                      maxLength: 8
+                      format: date
+                      pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                      example: 20190816
+                    lastPTPAmount:
+                      type: integer
+                      example: 1016.00
+                    accountNotes:
+                      type: string
+                      example: 'Customer can be shouty'
+                    accountStatus:
+                      type: string
+                      example: 'Open'
+                    arg:
+                      type: string
+                      example: 'A1'
+                    createdDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    createdBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    updatedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    updatedBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    f_customerId:
+                      type: integer
+                      example: 123
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    post:
+      summary: Create a new account
+      description: Restricted to admin users.
+      operationId: createAccount
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  accountNumber:
+                    type: string
+                    example: 'AAA001'
+                  accountName:
+                    type: string
+                    example: 'Disney'
+                  openDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the account was opened.'
+                  debtorAge:
+                    type: integer
+                    example: 30
+                  paymentTermDays:
+                    type: integer
+                    example: 60
+                  creditLimit:
+                    type: integer
+                    example: 1500.00
+                  totalBalance:
+                    type: integer
+                    example: 1000.00
+                  amountDue:
+                    type: integer
+                    example: 1500.00
+                  currentBalance:
+                    type: integer
+                    example: 1000.00
+                  days30:
+                    type: integer
+                    example: 30.00
+                  days60:
+                    type: integer
+                    example: 60.00
+                  days90:
+                    type: integer
+                    example: 90.00
+                  days120:
+                    type: integer
+                    example: 120.00
+                  days150:
+                    type: integer
+                    example: 150.00
+                  days180:
+                    type: integer
+                    example: 180.00
+                  days180Over:
+                    type: integer
+                    example: 200.00
+                  paymentMethod:
+                    type: string
+                    example: 'EFT'
+                  paymentDueDate:
+                    type: integer
+                    example: 2
+                  debitOrderDate:
+                    type: integer
+                    example: 2
+                  lastPaymentDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                  lastPaymentAmount:
+                    type: integer
+                    example: 2016.00
+                  lastPTPDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                  lastPTPAmount:
+                    type: integer
+                    example: 1016.00
+                  accountNotes:
+                    type: string
+                    example: 'Customer can be shouty'
+                  accountStatus:
+                    type: string
+                    example: 'Open'
+                  arg:
+                    type: string
+                    example: 'A1'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_customerId:
+                    type: string
+                    example: 'AAA101'
+              required:
+                - accountNumber
+                - updatedDate
+                - updatedBy
+      responses:
+        '200':
+          description: Account created successfully. The account number of the new account is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountNumber:
+                    type: string
+                    example: 'AAA001'
+        '400':
+          description: Account name is already on the books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Account name 'Disney' is already on the books"
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+  /accounts/{accountNumber}:
+    parameters:
+      - in: path
+        name: accountNumber
+        description: Account number
+        required: true
+        example: 'AAA001'
+        schema:
+          type: string
+    get:
+      summary: Get a single account by account number
+      description: Retrieve a single account by account number.
+      operationId: getAccountByAccountNumber
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Details of the specified account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  accountNumber:
+                    type: string
+                    example: 'AAA001'
+                  accountName:
+                    type: string
+                    example: 'Disney'
+                  openDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the account was opened.'
+                  debtorAge:
+                    type: integer
+                    example: 30
+                  paymentTermDays:
+                    type: integer
+                    example: 60
+                  creditLimit:
+                    type: integer
+                    example: 1500.00
+                  totalBalance:
+                    type: integer
+                    example: 1000.00
+                  amountDue:
+                    type: integer
+                    example: 1500.00
+                  currentBalance:
+                    type: integer
+                    example: 1000.00
+                  days30:
+                    type: integer
+                    example: 30.00
+                  days60:
+                    type: integer
+                    example: 60.00
+                  days90:
+                    type: integer
+                    example: 90.00
+                  days120:
+                    type: integer
+                    example: 120.00
+                  days150:
+                    type: integer
+                    example: 150.00
+                  days180:
+                    type: integer
+                    example: 180.00
+                  days180Over:
+                    type: integer
+                    example: 200.00
+                  paymentMethod:
+                    type: string
+                    example: 'EFT'
+                  paymentDueDate:
+                    type: integer
+                    example: 2
+                  debitOrderDate:
+                    type: integer
+                    example: 2
+                  lastPaymentDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                  lastPaymentAmount:
+                    type: integer
+                    example: 2016.00
+                  lastPTPDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                  lastPTPAmount:
+                    type: integer
+                    example: 1016.00
+                  accountNotes:
+                    type: string
+                    example: 'Customer can be shouty'
+                  accountStatus:
+                    type: string
+                    example: 'Open'
+                  arg:
+                    type: string
+                    example: 'A1'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_customerId:
+                    type: string
+                    example: 'AAA101'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    put:
+      summary: Update an account
+      description: Update details of an account.
+      operationId: updateAccount
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 123
+                accountNumber:
+                  type: string
+                  example: 'AAA001'
+                accountName:
+                  type: string
+                  example: 'Disney'
+                openDate:
+                  type: string
+                  minLength: 8
+                  maxLength: 8
+                  format: date
+                  pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                  example: 20190816
+                  description: 'Date the account was opened.'
+                debtorAge:
+                  type: integer
+                  example: 30
+                paymentTermDays:
+                  type: integer
+                  example: 60
+                creditLimit:
+                  type: integer
+                  example: 1500.00
+                totalBalance:
+                  type: integer
+                  example: 1000.00
+                amountDue:
+                  type: integer
+                  example: 1500.00
+                currentBalance:
+                  type: integer
+                  example: 1000.00
+                days30:
+                  type: integer
+                  example: 30.00
+                days60:
+                  type: integer
+                  example: 60.00
+                days90:
+                  type: integer
+                  example: 90.00
+                days120:
+                  type: integer
+                  example: 120.00
+                days150:
+                  type: integer
+                  example: 150.00
+                days180:
+                  type: integer
+                  example: 180.00
+                days180Over:
+                  type: integer
+                  example: 200.00
+                paymentMethod:
+                  type: string
+                  example: 'EFT'
+                paymentDueDate:
+                  type: integer
+                  example: 2
+                debitOrderDate:
+                  type: integer
+                  example: 2
+                lastPaymentDate:
+                  type: string
+                  minLength: 8
+                  maxLength: 8
+                  format: date
+                  pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                  example: 20190816
+                lastPaymentAmount:
+                  type: integer
+                  example: 2016.00
+                lastPTPDate:
+                  type: string
+                  minLength: 8
+                  maxLength: 8
+                  format: date
+                  pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                  example: 20190816
+                lastPTPAmount:
+                  type: integer
+                  example: 1016.00
+                accountNotes:
+                  type: string
+                  example: 'Customer can be shouty'
+                accountStatus:
+                  type: string
+                  example: 'Open'
+                arg:
+                  type: string
+                  example: 'A1'
+                createdDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                createdBy:
+                  type: string
+                  example: 'mickey@example.com'
+                updatedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                updatedBy:
+                  type: string
+                  example: 'mickey@example.com'
+                f_customerId:
+                  type: string
+                  example: 'AAA101'
+      responses:
+        '200':
+          description: Account updated successfully. The details of the updated account are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  accountNumber:
+                    type: string
+                    example: 'AAA001'
+                  accountName:
+                    type: string
+                    example: 'Disney'
+                  openDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the account was opened.'
+                  debtorAge:
+                    type: integer
+                    example: 30
+                  paymentTermDays:
+                    type: integer
+                    example: 60
+                  creditLimit:
+                    type: integer
+                    example: 1500.00
+                  totalBalance:
+                    type: integer
+                    example: 1000.00
+                  amountDue:
+                    type: integer
+                    example: 1500.00
+                  currentBalance:
+                    type: integer
+                    example: 1000.00
+                  days30:
+                    type: integer
+                    example: 30.00
+                  days60:
+                    type: integer
+                    example: 60.00
+                  days90:
+                    type: integer
+                    example: 90.00
+                  days120:
+                    type: integer
+                    example: 120.00
+                  days150:
+                    type: integer
+                    example: 150.00
+                  days180:
+                    type: integer
+                    example: 180.00
+                  days180Over:
+                    type: integer
+                    example: 200.00
+                  paymentMethod:
+                    type: string
+                    example: 'EFT'
+                  paymentDueDate:
+                    type: integer
+                    example: 2
+                  debitOrderDate:
+                    type: integer
+                    example: 2
+                  lastPaymentDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                  lastPaymentAmount:
+                    type: integer
+                    example: 2016.00
+                  lastPTPDate:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                  lastPTPAmount:
+                    type: integer
+                    example: 1016.00
+                  accountNotes:
+                    type: string
+                    example: 'Customer can be shouty'
+                  accountStatus:
+                    type: string
+                    example: 'Open'
+                  arg:
+                    type: string
+                    example: 'A1'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_customerId:
+                    type: string
+                    example: 'AAA101'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    delete:
       summary: Delete an account
-      description: Admin users can delete any account, regular users are restricted to their own account.
+      description: Delete an account.
       operationId: deleteAccount
       security:
         - bearerAuth: []
@@ -685,30 +1365,2350 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorisedError'
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  responses:
-    UnauthorisedError:
-      description: Access token is missing or invalid, or the user does not have access to perform the action
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: 'Unauthorised'
-    NotFoundError:
-      description: Not Found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: 'Not Found'
+  /cases:
+    get:
+      summary: Get a list of all cases
+      description: Retrieve list of all cases.
+      operationId: getAllCases
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: An array of all cases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 123
+                    caseNumber:
+                      type: integer
+                      example: 123
+                    initialAssignment:
+                      type: string
+                      example: 'mickey@example.com'
+                    currentAssignment:
+                      type: string
+                      example: 'mickey@example.com'
+                    nextVisitDateTime:
+                      type: string
+                      minLength: 8
+                      maxLength: 8
+                      format: date
+                      pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                      example: 20190816
+                      description: 'Date the case must be worked on again.'
+                    caseNotes:
+                      type: string
+                      example: 'Notes of the case provided by anyone'
+                    kamNotes:
+                      type: string
+                      example: 'Notes of the case provided only by the KAM'
+                    currentStatus:
+                      type: string
+                      example: 'Open'
+                    resolution:
+                      type: string
+                      example: 'What was down to resolve the case - provided by a dropdown on the front end'
+                    lockedDatetime:
+                      type: string
+                      minLength: 8
+                      maxLength: 8
+                      format: date
+                      pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                      example: 20190816
+                      description: 'Date the case was locked by opening it for action. The server uses the date to automatically unlock it if not resolved by the user'
+                    createdDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    createdBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    updatedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    updatedBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    f_accountNumber:
+                      type: string
+                      example: 'AAA101'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    post:
+      summary: Create a new case
+      description: Restricted to admin users.
+      operationId: createCase
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  caseNumber:
+                    type: integer
+                    example: 123
+                  initialAssignment:
+                    type: string
+                    example: 'mickey@example.com'
+                  currentAssignment:
+                    type: string
+                    example: 'mickey@example.com'
+                  nextVisitDateTime:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the case must be worked on again.'
+                  caseNotes:
+                    type: string
+                    example: 'Notes of the case provided by anyone'
+                  kamNotes:
+                    type: string
+                    example: 'Notes of the case provided only by the KAM'
+                  currentStatus:
+                    type: string
+                    example: 'Open'
+                  resolution:
+                    type: string
+                    example: 'What was down to resolve the case - provided by a dropdown on the front end'
+                  lockedDatetime:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the case was locked by opening it for action. The server uses the date to automatically unlock it if not resolved by the user'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_accountNumber:
+                    type: string
+                    example: 'AAA101'
+              required:
+                - createdDate
+                - createdBy
+                - currentAssignment
+                - currentStatus
+                - f_accountNumber
+      responses:
+        '200':
+          description: Case created successfully. The id of the new case is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+        '400':
+          description: Case id already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Case id '123' already exists"
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+  /cases/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Case id
+        required: true
+        example: 123
+        schema:
+          type: integer
+    get:
+      summary: Get a single case by id
+      description: Retrieve a single case by id.
+      operationId: getCaseById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Details of the specified case
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  caseNumber:
+                    type: integer
+                    example: 123
+                  initialAssignment:
+                    type: string
+                    example: 'mickey@example.com'
+                  currentAssignment:
+                    type: string
+                    example: 'mickey@example.com'
+                  nextVisitDateTime:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the case must be worked on again.'
+                  caseNotes:
+                    type: string
+                    example: 'Notes of the case provided by anyone'
+                  kamNotes:
+                    type: string
+                    example: 'Notes of the case provided only by the KAM'
+                  currentStatus:
+                    type: string
+                    example: 'Open'
+                  resolution:
+                    type: string
+                    example: 'What was down to resolve the case - provided by a dropdown on the front end'
+                  lockedDatetime:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the case was locked by opening it for action. The server uses the date to automatically unlock it if not resolved by the user'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_accountNumber:
+                    type: string
+                    example: 'AAA101'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    put:
+      summary: Update a case
+      description: Update details of a case.
+      operationId: updateCase
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 123
+                caseNumber:
+                  type: integer
+                  example: 123
+                initialAssignment:
+                  type: string
+                  example: 'mickey@example.com'
+                currentAssignment:
+                  type: string
+                  example: 'mickey@example.com'
+                nextVisitDateTime:
+                  type: string
+                  minLength: 8
+                  maxLength: 8
+                  format: date
+                  pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                  example: 20190816
+                  description: 'Date the case must be worked on again.'
+                caseNotes:
+                  type: string
+                  example: 'Notes of the case provided by anyone'
+                kamNotes:
+                  type: string
+                  example: 'Notes of the case provided only by the KAM'
+                currentStatus:
+                  type: string
+                  example: 'Open'
+                resolution:
+                  type: string
+                  example: 'What was down to resolve the case - provided by a dropdown on the front end'
+                lockedDatetime:
+                  type: string
+                  minLength: 8
+                  maxLength: 8
+                  format: date
+                  pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                  example: 20190816
+                  description: 'Date the case was locked by opening it for action. The server uses the date to automatically unlock it if not resolved by the user'
+                createdDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                createdBy:
+                  type: string
+                  example: 'mickey@example.com'
+                updatedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                updatedBy:
+                  type: string
+                  example: 'mickey@example.com'
+                f_accountNumber:
+                  type: string
+                  example: 'AAA101'
+      responses:
+        '200':
+          description: Case updated successfully. The details of the updated case are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  caseNumber:
+                    type: integer
+                    example: 123
+                  initialAssignment:
+                    type: string
+                    example: 'mickey@example.com'
+                  currentAssignment:
+                    type: string
+                    example: 'mickey@example.com'
+                  nextVisitDateTime:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the case must be worked on again.'
+                  caseNotes:
+                    type: string
+                    example: 'Notes of the case provided by anyone'
+                  kamNotes:
+                    type: string
+                    example: 'Notes of the case provided only by the KAM'
+                  currentStatus:
+                    type: string
+                    example: 'Open'
+                  resolution:
+                    type: string
+                    example: 'What was down to resolve the case - provided by a dropdown on the front end'
+                  lockedDatetime:
+                    type: string
+                    minLength: 8
+                    maxLength: 8
+                    format: date
+                    pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
+                    example: 20190816
+                    description: 'Date the case was locked by opening it for action. The server uses the date to automatically unlock it if not resolved by the user'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_accountNumber:
+                    type: string
+                    example: 'AAA101'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    delete:
+      summary: Delete a case
+      description: Delete a case.
+      operationId: deleteCase
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Case deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Case deleted successfully'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+
+  /clients:
+    get:
+      summary: Get a list of all clients
+      description: Retrieve list of all clients.
+      operationId: getAllClients
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: An array of all clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 123
+                    name:
+                      type: string
+                      example: 'Disney'
+                    regNum:
+                      type: string
+                      example: '2007/112/12'
+                    hasPaid:
+                      type: boolean
+                      example: true
+                    mainContact:
+                      type: string
+                      example: 'Mickey Mouse'
+                    phone:
+                      type: string
+                      example: '0123456789'
+                    email:
+                      type: string
+                      example: 'mickey@example.com'
+                    isActive:
+                      type: boolean
+                      example: true
+                    createdDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    createdBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    updatedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    updatedBy:
+                      type: string
+                      example: 'mickey@example.com'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    post:
+      summary: Create a new client
+      description: Restricted to admin users.
+      operationId: createClient
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  name:
+                    type: string
+                    example: 'Disney'
+                  regNum:
+                    type: string
+                    example: '2007/112/12'
+                  hasPaid:
+                    type: boolean
+                    example: true
+                  mainContact:
+                    type: string
+                    example: 'Mickey Mouse'
+                  phone:
+                    type: string
+                    example: '0123456789'
+                  email:
+                    type: string
+                    example: 'mickey@example.com'
+                  isActive:
+                    type: boolean
+                    example: true
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+              required:
+                - createdDate
+                - createdBy
+                - name
+                - hasPaid
+                - isActive
+      responses:
+        '200':
+          description: Client created successfully. The id of the new client is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+        '400':
+          description: Client name already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Client name 'Disney' already exists"
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+  /clients/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Client id
+        required: true
+        example: 123
+        schema:
+          type: integer
+    get:
+      summary: Get a single client by id
+      description: Retrieve a single client by id.
+      operationId: getClientById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Details of the specified client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  name:
+                    type: string
+                    example: 'Disney'
+                  regNum:
+                    type: string
+                    example: '2007/112/12'
+                  hasPaid:
+                    type: boolean
+                    example: true
+                  mainContact:
+                    type: string
+                    example: 'Mickey Mouse'
+                  phone:
+                    type: string
+                    example: '0123456789'
+                  email:
+                    type: string
+                    example: 'mickey@example.com'
+                  isActive:
+                    type: boolean
+                    example: true
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    put:
+      summary: Update a client
+      description: Update details of a client.
+      operationId: updateClient
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 123
+                name:
+                  type: string
+                  example: 'Disney'
+                regNum:
+                  type: string
+                  example: '2007/112/12'
+                hasPaid:
+                  type: boolean
+                  example: true
+                mainContact:
+                  type: string
+                  example: 'Mickey Mouse'
+                phone:
+                  type: string
+                  example: '0123456789'
+                email:
+                  type: string
+                  example: 'mickey@example.com'
+                isActive:
+                  type: boolean
+                  example: true
+                createdDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                createdBy:
+                  type: string
+                  example: 'mickey@example.com'
+                updatedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                updatedBy:
+                  type: string
+                  example: 'mickey@example.com'
+      responses:
+        '200':
+          description: Client updated successfully. The details of the updated client are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  name:
+                    type: string
+                    example: 'Disney'
+                  regNum:
+                    type: string
+                    example: '2007/112/12'
+                  hasPaid:
+                    type: boolean
+                    example: true
+                  mainContact:
+                    type: string
+                    example: 'Mickey Mouse'
+                  phone:
+                    type: string
+                    example: '0123456789'
+                  email:
+                    type: string
+                    example: 'mickey@example.com'
+                  isActive:
+                    type: boolean
+                    example: true
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    delete:
+      summary: Delete a client
+      description: Delete a client.
+      operationId: deleteClient
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Client deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Client deleted successfully'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+
+  /contacts:
+    get:
+      summary: Get a list of all contacts
+      description: Retrieve list of all contacts.
+      operationId: getAllContacts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: An array of all contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 123
+                    primaryContactName:
+                      type: string
+                      example: 'Mickey Mouse'
+                    primaryContactNumber:
+                      type: string
+                      example: '0123456789'
+                    primaryContactEmail:
+                      type: string
+                      example: 'mickey@example.com'
+                    representativeName:
+                      type: string
+                      example: 'Donald Duck'
+                    representativeNumber:
+                      type: string
+                      example: '0123456789'
+                    representativeEmail:
+                      type: string
+                      example: 'donald@example.com'
+                    alternativeRepName:
+                      type: string
+                      example: 'Goofy'
+                    alternativeRepNumber:
+                      type: string
+                      example: '0123456789'
+                    alternativeRepEmail:
+                      type: string
+                      example: 'goofy@example.com'
+                    otherNumber1:
+                      type: string
+                      example: '0123456789'
+                    otherNumber2:
+                      type: string
+                      example: '0123456789'
+                    otherNumber3:
+                      type: string
+                      example: '0123456789'
+                    otherNumber4:
+                      type: string
+                      example: '0123456789'
+                    otherNumber5:
+                      type: string
+                      example: '0123456789'
+                    otherNumber6:
+                      type: string
+                      example: '0123456789'
+                    otherNumber7:
+                      type: string
+                      example: '0123456789'
+                    otherNumber8:
+                      type: string
+                      example: '0123456789'
+                    otherNumber9:
+                      type: string
+                      example: '0123456789'
+                    otherNumber10:
+                      type: string
+                      example: '0123456789'
+                    otherEmail1:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail2:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail3:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail4:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail5:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail6:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail7:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail8:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail9:
+                      type: string
+                      example: 'minnie@example.com'
+                    otherEmail10:
+                      type: string
+                      example: 'minnie@example.com'
+                    dnc1:
+                      type: string
+                      example: '0123456789'
+                    dnc2:
+                      type: string
+                      example: '0123456789'
+                    dnc3:
+                      type: string
+                      example: '0123456789'
+                    dnc4:
+                      type: string
+                      example: '0123456789'
+                    dnc5:
+                      type: string
+                      example: '0123456789'
+                    createdDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    createdBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    updatedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    updatedBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    f_accountNumber:
+                      type: string
+                      example: 'AAA101'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    post:
+      summary: Create a new contact
+      description: Restricted to admin users.
+      operationId: createContact
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  primaryContactName:
+                    type: string
+                    example: 'Mickey Mouse'
+                  primaryContactNumber:
+                    type: string
+                    example: '0123456789'
+                  primaryContactEmail:
+                    type: string
+                    example: 'mickey@example.com'
+                  representativeName:
+                    type: string
+                    example: 'Donald Duck'
+                  representativeNumber:
+                    type: string
+                    example: '0123456789'
+                  representativeEmail:
+                    type: string
+                    example: 'donald@example.com'
+                  alternativeRepName:
+                    type: string
+                    example: 'Goofy'
+                  alternativeRepNumber:
+                    type: string
+                    example: '0123456789'
+                  alternativeRepEmail:
+                    type: string
+                    example: 'goofy@example.com'
+                  otherNumber1:
+                    type: string
+                    example: '0123456789'
+                  otherNumber2:
+                    type: string
+                    example: '0123456789'
+                  otherNumber3:
+                    type: string
+                    example: '0123456789'
+                  otherNumber4:
+                    type: string
+                    example: '0123456789'
+                  otherNumber5:
+                    type: string
+                    example: '0123456789'
+                  otherNumber6:
+                    type: string
+                    example: '0123456789'
+                  otherNumber7:
+                    type: string
+                    example: '0123456789'
+                  otherNumber8:
+                    type: string
+                    example: '0123456789'
+                  otherNumber9:
+                    type: string
+                    example: '0123456789'
+                  otherNumber10:
+                    type: string
+                    example: '0123456789'
+                  otherEmail1:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail2:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail3:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail4:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail5:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail6:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail7:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail8:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail9:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail10:
+                    type: string
+                    example: 'minnie@example.com'
+                  dnc1:
+                    type: string
+                    example: '0123456789'
+                  dnc2:
+                    type: string
+                    example: '0123456789'
+                  dnc3:
+                    type: string
+                    example: '0123456789'
+                  dnc4:
+                    type: string
+                    example: '0123456789'
+                  dnc5:
+                    type: string
+                    example: '0123456789'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_accountNumber:
+                    type: string
+                    example: 'AAA101'
+              required:
+                - f_accountNumber
+      responses:
+        '200':
+          description: Contact created successfully. The id of the new contact is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+        '400':
+          description: Contact id already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Contact id '123' already exists"
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+  /contacts/{f_accountNumber}:
+    parameters:
+      - in: path
+        name: f_accountNumber
+        description: Account number
+        required: true
+        example: 'AAA101'
+        schema:
+          type: string
+    get:
+      summary: Get a single contact by f_accountNumber
+      description: Retrieve a single contact by f_accountNumber.
+      operationId: getContactByAccountNumber
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Details of the specified contact
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  primaryContactName:
+                    type: string
+                    example: 'Mickey Mouse'
+                  primaryContactNumber:
+                    type: string
+                    example: '0123456789'
+                  primaryContactEmail:
+                    type: string
+                    example: 'mickey@example.com'
+                  representativeName:
+                    type: string
+                    example: 'Donald Duck'
+                  representativeNumber:
+                    type: string
+                    example: '0123456789'
+                  representativeEmail:
+                    type: string
+                    example: 'donald@example.com'
+                  alternativeRepName:
+                    type: string
+                    example: 'Goofy'
+                  alternativeRepNumber:
+                    type: string
+                    example: '0123456789'
+                  alternativeRepEmail:
+                    type: string
+                    example: 'goofy@example.com'
+                  otherNumber1:
+                    type: string
+                    example: '0123456789'
+                  otherNumber2:
+                    type: string
+                    example: '0123456789'
+                  otherNumber3:
+                    type: string
+                    example: '0123456789'
+                  otherNumber4:
+                    type: string
+                    example: '0123456789'
+                  otherNumber5:
+                    type: string
+                    example: '0123456789'
+                  otherNumber6:
+                    type: string
+                    example: '0123456789'
+                  otherNumber7:
+                    type: string
+                    example: '0123456789'
+                  otherNumber8:
+                    type: string
+                    example: '0123456789'
+                  otherNumber9:
+                    type: string
+                    example: '0123456789'
+                  otherNumber10:
+                    type: string
+                    example: '0123456789'
+                  otherEmail1:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail2:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail3:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail4:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail5:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail6:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail7:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail8:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail9:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail10:
+                    type: string
+                    example: 'minnie@example.com'
+                  dnc1:
+                    type: string
+                    example: '0123456789'
+                  dnc2:
+                    type: string
+                    example: '0123456789'
+                  dnc3:
+                    type: string
+                    example: '0123456789'
+                  dnc4:
+                    type: string
+                    example: '0123456789'
+                  dnc5:
+                    type: string
+                    example: '0123456789'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_accountNumber:
+                    type: string
+                    example: 'AAA101'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    put:
+      summary: Update a contact
+      description: Update details of a contact.
+      operationId: updateContact
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 123
+                primaryContactName:
+                  type: string
+                  example: 'Mickey Mouse'
+                primaryContactNumber:
+                  type: string
+                  example: '0123456789'
+                primaryContactEmail:
+                  type: string
+                  example: 'mickey@example.com'
+                representativeName:
+                  type: string
+                  example: 'Donald Duck'
+                representativeNumber:
+                  type: string
+                  example: '0123456789'
+                representativeEmail:
+                  type: string
+                  example: 'donald@example.com'
+                alternativeRepName:
+                  type: string
+                  example: 'Goofy'
+                alternativeRepNumber:
+                  type: string
+                  example: '0123456789'
+                alternativeRepEmail:
+                  type: string
+                  example: 'goofy@example.com'
+                otherNumber1:
+                  type: string
+                  example: '0123456789'
+                otherNumber2:
+                  type: string
+                  example: '0123456789'
+                otherNumber3:
+                  type: string
+                  example: '0123456789'
+                otherNumber4:
+                  type: string
+                  example: '0123456789'
+                otherNumber5:
+                  type: string
+                  example: '0123456789'
+                otherNumber6:
+                  type: string
+                  example: '0123456789'
+                otherNumber7:
+                  type: string
+                  example: '0123456789'
+                otherNumber8:
+                  type: string
+                  example: '0123456789'
+                otherNumber9:
+                  type: string
+                  example: '0123456789'
+                otherNumber10:
+                  type: string
+                  example: '0123456789'
+                otherEmail1:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail2:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail3:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail4:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail5:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail6:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail7:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail8:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail9:
+                  type: string
+                  example: 'minnie@example.com'
+                otherEmail10:
+                  type: string
+                  example: 'minnie@example.com'
+                dnc1:
+                  type: string
+                  example: '0123456789'
+                dnc2:
+                  type: string
+                  example: '0123456789'
+                dnc3:
+                  type: string
+                  example: '0123456789'
+                dnc4:
+                  type: string
+                  example: '0123456789'
+                dnc5:
+                  type: string
+                  example: '0123456789'
+                createdDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                createdBy:
+                  type: string
+                  example: 'mickey@example.com'
+                updatedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                updatedBy:
+                  type: string
+                  example: 'mickey@example.com'
+                f_accountNumber:
+                  type: string
+                  example: 'AAA101'
+      responses:
+        '200':
+          description: Contact updated successfully. The details of the updated contact are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  primaryContactName:
+                    type: string
+                    example: 'Mickey Mouse'
+                  primaryContactNumber:
+                    type: string
+                    example: '0123456789'
+                  primaryContactEmail:
+                    type: string
+                    example: 'mickey@example.com'
+                  representativeName:
+                    type: string
+                    example: 'Donald Duck'
+                  representativeNumber:
+                    type: string
+                    example: '0123456789'
+                  representativeEmail:
+                    type: string
+                    example: 'donald@example.com'
+                  alternativeRepName:
+                    type: string
+                    example: 'Goofy'
+                  alternativeRepNumber:
+                    type: string
+                    example: '0123456789'
+                  alternativeRepEmail:
+                    type: string
+                    example: 'goofy@example.com'
+                  otherNumber1:
+                    type: string
+                    example: '0123456789'
+                  otherNumber2:
+                    type: string
+                    example: '0123456789'
+                  otherNumber3:
+                    type: string
+                    example: '0123456789'
+                  otherNumber4:
+                    type: string
+                    example: '0123456789'
+                  otherNumber5:
+                    type: string
+                    example: '0123456789'
+                  otherNumber6:
+                    type: string
+                    example: '0123456789'
+                  otherNumber7:
+                    type: string
+                    example: '0123456789'
+                  otherNumber8:
+                    type: string
+                    example: '0123456789'
+                  otherNumber9:
+                    type: string
+                    example: '0123456789'
+                  otherNumber10:
+                    type: string
+                    example: '0123456789'
+                  otherEmail1:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail2:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail3:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail4:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail5:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail6:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail7:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail8:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail9:
+                    type: string
+                    example: 'minnie@example.com'
+                  otherEmail10:
+                    type: string
+                    example: 'minnie@example.com'
+                  dnc1:
+                    type: string
+                    example: '0123456789'
+                  dnc2:
+                    type: string
+                    example: '0123456789'
+                  dnc3:
+                    type: string
+                    example: '0123456789'
+                  dnc4:
+                    type: string
+                    example: '0123456789'
+                  dnc5:
+                    type: string
+                    example: '0123456789'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_accountNumber:
+                    type: string
+                    example: 'AAA101'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    delete:
+      summary: Delete a contact
+      description: Delete a contact.
+      operationId: deleteContact
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Contact deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Contact deleted successfully'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+
+  /customers:
+    get:
+      summary: Get a list of all customers
+      description: Retrieve list of all customers.
+      operationId: getAllCustomers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: An array of all customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 123
+                    operatorShortCode:
+                      type: string
+                      example: 'DISN'
+                    customerRefNo:
+                      type: string
+                      example: 'AAA110'
+                    customerName:
+                      type: string
+                      example: 'Disney Productions'
+                    customerEntity:
+                      type: string
+                      example: 'Enterprise'
+                    regIdNumber:
+                      type: string
+                      example: '2007/112/12'
+                    regIdStatus:
+                      type: string
+                      example: 'Final Deregistration'
+                    customerType:
+                      type: string
+                      example: 'Contract'
+                    productType:
+                      type: string
+                      example: 'Cellular'
+                    address1:
+                      type: string
+                      example: '123 Main Street'
+                    address2:
+                      type: string
+                      example: '2nd Floor'
+                    address3:
+                      type: string
+                      example: 'Suburbia'
+                    address4:
+                      type: string
+                      example: 'City of Gold'
+                    address5:
+                      type: string
+                      example: '2345'
+                    createdDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    createdBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    updatedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    updatedBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    closedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    closedBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    f_clientId:
+                      type: integer
+                      example: 123
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    post:
+      summary: Create a new customer
+      description: Restricted to admin users.
+      operationId: createCustomer
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  operatorShortCode:
+                    type: string
+                    example: 'DISN'
+                  customerRefNo:
+                    type: string
+                    example: 'AAA110'
+                  customerName:
+                    type: string
+                    example: 'Disney Productions'
+                  customerEntity:
+                    type: string
+                    example: 'Enterprise'
+                  regIdNumber:
+                    type: string
+                    example: '2007/112/12'
+                  regIdStatus:
+                    type: string
+                    example: 'Final Deregistration'
+                  customerType:
+                    type: string
+                    example: 'Contract'
+                  productType:
+                    type: string
+                    example: 'Cellular'
+                  address1:
+                    type: string
+                    example: '123 Main Street'
+                  address2:
+                    type: string
+                    example: '2nd Floor'
+                  address3:
+                    type: string
+                    example: 'Suburbia'
+                  address4:
+                    type: string
+                    example: 'City of Gold'
+                  address5:
+                    type: string
+                    example: '2345'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  closedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  closedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_clientId:
+                    type: integer
+                    example: 123
+              required:
+                - customerRefNo
+                - customerName
+                - customerEntity
+                - createdBy
+                - createdDate
+                - f_clientId
+      responses:
+        '200':
+          description: Customer created successfully. The id of the new customer is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+        '400':
+          description: Customer name already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Customer name 'Disney' already exists"
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+  /customers/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Customer id
+        required: true
+        example: 123
+        schema:
+          type: integer
+    get:
+      summary: Get a single customer by customer id
+      description: Retrieve a single customer by customer id.
+      operationId: getCustomerById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Details of the specified customer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  operatorShortCode:
+                    type: string
+                    example: 'DISN'
+                  customerRefNo:
+                    type: string
+                    example: 'AAA110'
+                  customerName:
+                    type: string
+                    example: 'Disney Productions'
+                  customerEntity:
+                    type: string
+                    example: 'Enterprise'
+                  regIdNumber:
+                    type: string
+                    example: '2007/112/12'
+                  regIdStatus:
+                    type: string
+                    example: 'Final Deregistration'
+                  customerType:
+                    type: string
+                    example: 'Contract'
+                  productType:
+                    type: string
+                    example: 'Cellular'
+                  address1:
+                    type: string
+                    example: '123 Main Street'
+                  address2:
+                    type: string
+                    example: '2nd Floor'
+                  address3:
+                    type: string
+                    example: 'Suburbia'
+                  address4:
+                    type: string
+                    example: 'City of Gold'
+                  address5:
+                    type: string
+                    example: '2345'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  closedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  closedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_clientId:
+                    type: integer
+                    example: 123
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    put:
+      summary: Update a customer
+      description: Update details of a customer.
+      operationId: updateCustomer
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 123
+                operatorShortCode:
+                  type: string
+                  example: 'DISN'
+                customerRefNo:
+                  type: string
+                  example: 'AAA110'
+                customerName:
+                  type: string
+                  example: 'Disney Productions'
+                customerEntity:
+                  type: string
+                  example: 'Enterprise'
+                regIdNumber:
+                  type: string
+                  example: '2007/112/12'
+                regIdStatus:
+                  type: string
+                  example: 'Final Deregistration'
+                customerType:
+                  type: string
+                  example: 'Contract'
+                productType:
+                  type: string
+                  example: 'Cellular'
+                address1:
+                  type: string
+                  example: '123 Main Street'
+                address2:
+                  type: string
+                  example: '2nd Floor'
+                address3:
+                  type: string
+                  example: 'Suburbia'
+                address4:
+                  type: string
+                  example: 'City of Gold'
+                address5:
+                  type: string
+                  example: '2345'
+                createdDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                createdBy:
+                  type: string
+                  example: 'mickey@example.com'
+                updatedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                updatedBy:
+                  type: string
+                  example: 'mickey@example.com'
+                closedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                closedBy:
+                  type: string
+                  example: 'mickey@example.com'
+                f_clientId:
+                  type: integer
+                  example: 123
+      responses:
+        '200':
+          description: Customer updated successfully. The details of the updated customer are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  operatorShortCode:
+                    type: string
+                    example: 'DISN'
+                  customerRefNo:
+                    type: string
+                    example: 'AAA110'
+                  customerName:
+                    type: string
+                    example: 'Disney Productions'
+                  customerEntity:
+                    type: string
+                    example: 'Enterprise'
+                  regIdNumber:
+                    type: string
+                    example: '2007/112/12'
+                  regIdStatus:
+                    type: string
+                    example: 'Final Deregistration'
+                  customerType:
+                    type: string
+                    example: 'Contract'
+                  productType:
+                    type: string
+                    example: 'Cellular'
+                  address1:
+                    type: string
+                    example: '123 Main Street'
+                  address2:
+                    type: string
+                    example: '2nd Floor'
+                  address3:
+                    type: string
+                    example: 'Suburbia'
+                  address4:
+                    type: string
+                    example: 'City of Gold'
+                  address5:
+                    type: string
+                    example: '2345'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  updatedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  updatedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  closedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  closedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_clientId:
+                    type: integer
+                    example: 123
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    delete:
+      summary: Delete a customer
+      description: Delete a customer.
+      operationId: deleteCustomer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Customer deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Customer deleted successfully'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+
+  /outcomes:
+    get:
+      summary: Get a list of all outcomes
+      description: Retrieve list of all outcomes.
+      operationId: getAllOutcomes
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: An array of all outcomes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 123
+                    outcomeStatus:
+                      type: string
+                      example: 'Open'
+                    transactionType:
+                      type: string
+                      example: 'Call'
+                    numberCalled:
+                      type: string
+                      example: '0123456789'
+                    emailUsed:
+                      type: string
+                      example: 'pluto@example.com'
+                    contactPerson:
+                      type: string
+                      example: 'Pluto'
+                    outcomeResolution:
+                      type: string
+                      example: 'Customer requested a callback'
+                    ptpDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    ptpAmount:
+                      type: integer
+                      example: 1500.00
+                    debitResubmissionDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    debitResubmissionAmount:
+                      type: integer
+                      example: 2000.00
+                    outcomeNotes:
+                      type: string
+                      example: 'Need to call back the customer'
+                    nextSteps:
+                      type: string
+                      example: 'Need to keep pressing for payment'
+                    createdDate:
+                      type: string
+                      example: '2020-05-05T09:12:57.848Z'
+                    createdBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    closedDate:
+                      type: string
+                      example: '2020-05-08T03:11:21.553Z'
+                    closedBy:
+                      type: string
+                      example: 'mickey@example.com'
+                    f_caseId:
+                      type: integer
+                      example: 123
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    post:
+      summary: Create a new outcome
+      description: Open to all users.
+      operationId: createOutcome
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  outcomeStatus:
+                    type: string
+                    example: 'Open'
+                  transactionType:
+                    type: string
+                    example: 'Call'
+                  numberCalled:
+                    type: string
+                    example: '0123456789'
+                  emailUsed:
+                    type: string
+                    example: 'pluto@example.com'
+                  contactPerson:
+                    type: string
+                    example: 'Pluto'
+                  outcomeResolution:
+                    type: string
+                    example: 'Customer requested a callback'
+                  ptpDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  ptpAmount:
+                    type: integer
+                    example: 1500.00
+                  debitResubmissionDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  debitResubmissionAmount:
+                    type: integer
+                    example: 2000.00
+                  outcomeNotes:
+                    type: string
+                    example: 'Need to call back the customer'
+                  nextSteps:
+                    type: string
+                    example: 'Need to keep pressing for payment'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  closedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  closedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_caseId:
+                    type: integer
+                    example: 123
+              required:
+                - createdBy
+                - createdDate
+                - f_caseId
+      responses:
+        '200':
+          description: Outcome created successfully. The id of the new outcome is returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+        '400':
+          description: Outcome id already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Outcome id '123' already exists"
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+  /outcomes/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Outcome id
+        required: true
+        example: 123
+        schema:
+          type: integer
+    get:
+      summary: Get a single outcome by outcome id
+      description: Retrieve a single outcome by outcome id.
+      operationId: getOutcomeById
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Details of the specified customer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  outcomeStatus:
+                    type: string
+                    example: 'Open'
+                  transactionType:
+                    type: string
+                    example: 'Call'
+                  numberCalled:
+                    type: string
+                    example: '0123456789'
+                  emailUsed:
+                    type: string
+                    example: 'pluto@example.com'
+                  contactPerson:
+                    type: string
+                    example: 'Pluto'
+                  outcomeResolution:
+                    type: string
+                    example: 'Customer requested a callback'
+                  ptpDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  ptpAmount:
+                    type: integer
+                    example: 1500.00
+                  debitResubmissionDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  debitResubmissionAmount:
+                    type: integer
+                    example: 2000.00
+                  outcomeNotes:
+                    type: string
+                    example: 'Need to call back the customer'
+                  nextSteps:
+                    type: string
+                    example: 'Need to keep pressing for payment'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  closedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  closedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_caseId:
+                    type: integer
+                    example: 123
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    put:
+      summary: Update an outcome
+      description: Update details of an outcome.
+      operationId: updateOutcome
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 123
+                outcomeStatus:
+                  type: string
+                  example: 'Open'
+                transactionType:
+                  type: string
+                  example: 'Call'
+                numberCalled:
+                  type: string
+                  example: '0123456789'
+                emailUsed:
+                  type: string
+                  example: 'pluto@example.com'
+                contactPerson:
+                  type: string
+                  example: 'Pluto'
+                outcomeResolution:
+                  type: string
+                  example: 'Customer requested a callback'
+                ptpDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                ptpAmount:
+                  type: integer
+                  example: 1500.00
+                debitResubmissionDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                debitResubmissionAmount:
+                  type: integer
+                  example: 2000.00
+                outcomeNotes:
+                  type: string
+                  example: 'Need to call back the customer'
+                nextSteps:
+                  type: string
+                  example: 'Need to keep pressing for payment'
+                createdDate:
+                  type: string
+                  example: '2020-05-05T09:12:57.848Z'
+                createdBy:
+                  type: string
+                  example: 'mickey@example.com'
+                closedDate:
+                  type: string
+                  example: '2020-05-08T03:11:21.553Z'
+                closedBy:
+                  type: string
+                  example: 'mickey@example.com'
+                f_caseId:
+                  type: integer
+                  example: 123
+      responses:
+        '200':
+          description: Outcome updated successfully. The details of the updated outcome are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 123
+                  outcomeStatus:
+                    type: string
+                    example: 'Open'
+                  transactionType:
+                    type: string
+                    example: 'Call'
+                  numberCalled:
+                    type: string
+                    example: '0123456789'
+                  emailUsed:
+                    type: string
+                    example: 'pluto@example.com'
+                  contactPerson:
+                    type: string
+                    example: 'Pluto'
+                  outcomeResolution:
+                    type: string
+                    example: 'Customer requested a callback'
+                  ptpDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  ptpAmount:
+                    type: integer
+                    example: 1500.00
+                  debitResubmissionDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  debitResubmissionAmount:
+                    type: integer
+                    example: 2000.00
+                  outcomeNotes:
+                    type: string
+                    example: 'Need to call back the customer'
+                  nextSteps:
+                    type: string
+                    example: 'Need to keep pressing for payment'
+                  createdDate:
+                    type: string
+                    example: '2020-05-05T09:12:57.848Z'
+                  createdBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  closedDate:
+                    type: string
+                    example: '2020-05-08T03:11:21.553Z'
+                  closedBy:
+                    type: string
+                    example: 'mickey@example.com'
+                  f_caseId:
+                    type: integer
+                    example: 123
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+    delete:
+      summary: Delete an outcome
+      description: Delete an outcome.
+      operationId: deleteOutcome
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Outcome deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Outcome deleted successfully'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorisedError'
+
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+    responses:
+      UnauthorisedError:
+        description: Access token is missing or invalid, or the user does not have access to perform the action
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Unauthorised'
+      NotFoundError:
+        description: Not Found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: 'Not Found'

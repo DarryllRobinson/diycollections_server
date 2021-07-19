@@ -4,34 +4,48 @@ module.exports = model;
 
 function model(sequelize) {
   const attributes = {
-    email: { type: DataTypes.STRING, allowNull: false },
-    phone: { type: DataTypes.STRING, allowNull: false },
-    passwordHash: { type: DataTypes.STRING, allowNull: false },
-    title: { type: DataTypes.STRING, allowNull: false },
-    firstName: { type: DataTypes.STRING, allowNull: false },
-    lastName: { type: DataTypes.STRING, allowNull: false },
-    acceptTerms: { type: DataTypes.BOOLEAN },
-    role: { type: DataTypes.STRING, allowNull: false },
-    verificationToken: { type: DataTypes.STRING },
-    verified: { type: DataTypes.DATE },
-    resetToken: { type: DataTypes.STRING },
-    resetTokenExpires: { type: DataTypes.DATE },
-    passwordReset: { type: DataTypes.DATE },
-    created: {
+    accountNumber: { type: DataTypes.STRING, allowNull: false },
+    accountName: { type: DataTypes.STRING, allowNull: false },
+    openDate: { type: DataTypes.DATE, allowNull: true },
+    debtorAge: { type: DataTypes.INTEGER, allowNull: true },
+    paymentTermDays: { type: DataTypes.INTEGER, allowNull: true },
+    creditLimit: { type: DataTypes.INTEGER, allowNull: true },
+    totalBalance: { type: DataTypes.INTEGER, allowNull: true },
+    amountDue: { type: DataTypes.INTEGER, allowNull: true },
+    currentBalance: { type: DataTypes.INTEGER, allowNull: true },
+    days30: { type: DataTypes.INTEGER, allowNull: true },
+    days60: { type: DataTypes.INTEGER, allowNull: true },
+    days90: { type: DataTypes.INTEGER, allowNull: true },
+    days120: { type: DataTypes.INTEGER, allowNull: true },
+    days150: { type: DataTypes.INTEGER, allowNull: true },
+    days180: { type: DataTypes.INTEGER, allowNull: true },
+    days180Over: { type: DataTypes.INTEGER, allowNull: true },
+    paymentMethod: { type: DataTypes.STRING, allowNull: true },
+    paymentDueDate: { type: DataTypes.INTEGER, allowNull: true },
+    debitOrderDate: { type: DataTypes.INTEGER, allowNull: true },
+    lastPaymentDate: { type: DataTypes.DATE, allowNull: true },
+    lastPaymentAmount: { type: DataTypes.INTEGER, allowNull: true },
+    lastPTPDate: { type: DataTypes.DATE, allowNull: true },
+    lastPTPAmount: { type: DataTypes.INTEGER, allowNull: true },
+    accountNotes: { type: DataTypes.STRING, allowNull: true },
+    accountStatus: { type: DataTypes.STRING, allowNull: true },
+    arg: { type: DataTypes.STRING, allowNull: true },
+    createdDate: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-    updated: { type: DataTypes.DATE },
-    isVerified: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return !!(this.verified || this.passwordReset);
-      },
+    createdBy: { type: DataTypes.STRING, allowNull: false },
+    updatedDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
     },
+    updatedBy: { type: DataTypes.STRING, allowNull: true },
+    f_customerId: { type: DataTypes.STRING, allowNull: false },
   };
 
-  const options = {
+  /*const options = {
     // disable default timestamp fields (createdAt and updatedAt)
     timestamps: false,
     defaultScope: {
@@ -42,7 +56,8 @@ function model(sequelize) {
       // include hash with this scope
       withHash: { attributes: {} },
     },
-  };
+  };*/
 
-  return sequelize.define('account', attributes, options);
+  //return sequelize.define('account', attributes, options);
+  return sequelize.define('account', attributes);
 }
