@@ -27,7 +27,7 @@ app.use('/api/outcomes', require('./outcomes/outcomes.controller'));
 app.use('/api/queues', require('./queues/queues.controller'));
 
 // Report routes
-app.use('/api/reports/:report', require('./reports/reports.controller'));
+app.use('/api/reports', require('./reports/reports.controller'));
 
 // User routes
 app.use('/api/users', require('./users/users.controller'));

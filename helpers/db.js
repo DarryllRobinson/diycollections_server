@@ -20,6 +20,7 @@ async function initialize() {
   // connect to db
   const sequelize = new Sequelize(database, user, password, {
     dialect: 'mysql',
+    dialectOptions: { decimalNumbers: true },
   });
 
   // init models and add them to the exported db object
