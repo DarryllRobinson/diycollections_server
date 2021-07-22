@@ -16,17 +16,7 @@ function model(sequelize) {
     address3: { type: DataTypes.STRING, allowNull: true },
     address4: { type: DataTypes.STRING, allowNull: true },
     address5: { type: DataTypes.STRING, allowNull: true },
-    createdDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: DataTypes.NOW,
-    },
     createdBy: { type: DataTypes.STRING, allowNull: false },
-    updatedDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: DataTypes.NOW,
-    },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
     closedDate: {
       type: DataTypes.DATE,

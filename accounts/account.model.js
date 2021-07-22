@@ -30,19 +30,8 @@ function model(sequelize) {
     accountNotes: { type: DataTypes.STRING, allowNull: true },
     accountStatus: { type: DataTypes.STRING, allowNull: true },
     arg: { type: DataTypes.STRING, allowNull: true },
-    createdDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
     createdBy: { type: DataTypes.STRING, allowNull: false },
-    updatedDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: DataTypes.NOW,
-    },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
-    f_customerId: { type: DataTypes.STRING, allowNull: false },
   };
 
   /*const options = {

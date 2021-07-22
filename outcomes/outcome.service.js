@@ -91,9 +91,9 @@ function basicDetails(outcome) {
     debitResubmissionAmount,
     outcomeNotes,
     nextSteps,
-    createdDate,
+    createdAt,
     createdBy,
-    f_caseId,
+    caseId,
   } = outcome;
   return {
     id,
@@ -109,8 +109,8 @@ function basicDetails(outcome) {
     debitResubmissionAmount,
     outcomeNotes,
     nextSteps,
-    createdDate,
+    createdAt,
     createdBy,
-    f_caseId,
+    caseId,
   };
 }

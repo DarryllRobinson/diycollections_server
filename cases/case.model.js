@@ -17,11 +17,6 @@ function model(sequelize) {
     pendReason: { type: DataTypes.STRING, allowNull: true },
     resolution: { type: DataTypes.STRING, allowNull: true },
     caseReason: { type: DataTypes.STRING, allowNull: true },
-    createdDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     lockedDatetime: { type: DataTypes.DATE, allowNull: true },
     reopenedDate: {
@@ -38,12 +33,7 @@ function model(sequelize) {
       allowNull: true,
     },
     reassignedBy: { type: DataTypes.STRING, allowNull: true },
-    updatedDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
-    f_accountNumber: { type: DataTypes.STRING, allowNull: false },
   };
 
   /*const options = {

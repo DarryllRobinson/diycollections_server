@@ -16,25 +16,19 @@ function model(sequelize) {
     outcomeResolution: { type: DataTypes.STRING, allowNull: true },
     ptpDate: { type: DataTypes.DATE, allowNull: true },
     ptpAmount: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
       defaultValue: 0.0,
     },
     debitResubmissionDate: { type: DataTypes.DATE, allowNull: true },
     debitResubmissionAmount: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
       defaultValue: 0.0,
     },
     outcomeNotes: { type: DataTypes.STRING, allowNull: true },
     nextSteps: { type: DataTypes.STRING, allowNull: true },
-    createdDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
     createdBy: { type: DataTypes.STRING, allowNull: false },
-    f_caseId: { type: DataTypes.STRING, allowNull: false },
   };
 
   /*const options = {

@@ -112,11 +112,11 @@ function basicDetails(account) {
     accountNotes,
     accountStatus,
     arg,
-    createdDate,
+    createdAt,
     createdBy,
-    updatedDate,
+    updatedAt,
     updatedBy,
-    f_customerId,
+    customerId,
   } = account;
   return {
     id,
@@ -146,10 +146,10 @@ function basicDetails(account) {
     accountNotes,
     accountStatus,
     arg,
-    createdDate,
+    createdAt,
     createdBy,
-    updatedDate,
+    updatedAt,
     updatedBy,
-    f_customerId,
+    customerId,
   };
 }

@@ -286,7 +286,7 @@ function basicDetails(user) {
 
 async function sendVerificationEmail(user) {
   //http://localhost:8080/user/verify-email?token=1626345578891
-  const verifyUrl = `http://localhost:8080/user/verify-email?token=${user.verificationToken}`;
+  const verifyUrl = `http://localhost:4000/api/users/verify-email?token=${user.verificationToken}`;
   /*const message = `<p>Please use the below token to verify your email address with the <code>/user/verify-email</code> api route:</p>
                    <p><code>http://localhost:4000${user.verificationToken}</code></p>`;*/
   const message = `<p>Please click <a href="${verifyUrl}">here</a> to verify your email address:</p>

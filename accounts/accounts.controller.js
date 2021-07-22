@@ -57,11 +57,8 @@ function createSchema(req, res, next) {
     accountNotes: Joi.string(),
     accountStatus: Joi.string(),
     arg: Joi.string(),
-    createdDate: Joi.date().required(),
     createdBy: Joi.string().required(),
-    updatedDate: Joi.date(),
     updatedBy: Joi.string(),
-    f_customerId: Joi.string().required(),
   });
   validateRequest(req, next, schema);
 }
@@ -108,11 +105,8 @@ function updateSchema(req, res, next) {
     accountNotes: Joi.string(),
     accountStatus: Joi.string(),
     arg: Joi.string(),
-    createdDate: Joi.date().required(),
     createdBy: Joi.string().required(),
-    updatedDate: Joi.date(),
     updatedBy: Joi.string(),
-    f_customerId: Joi.string().required(),
   };
   validateRequest(req, next, schema);
 }

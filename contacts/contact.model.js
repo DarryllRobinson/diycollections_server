@@ -38,18 +38,7 @@ function model(sequelize) {
     dnc3: { type: DataTypes.STRING, allowNull: true },
     dnc4: { type: DataTypes.STRING, allowNull: true },
     dnc5: { type: DataTypes.STRING, allowNull: true },
-    createdDate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    createdBy: { type: DataTypes.STRING, allowNull: true },
-    updatedDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
-    f_accountNumber: { type: DataTypes.STRING, allowNull: false },
   };
 
   /*const options = {

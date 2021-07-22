@@ -113,11 +113,11 @@ function basicDetails(contact) {
     dnc3,
     dnc4,
     dnc5,
-    createdDate,
+    createdAt,
     createdBy,
-    updatedDate,
+    updatedAt,
     updatedBy,
-    f_accountNumber,
+    accountNumber,
   } = contact;
   return {
     id,
@@ -155,10 +155,10 @@ function basicDetails(contact) {
     dnc3,
     dnc4,
     dnc5,
-    createdDate,
+    createdAt,
     createdBy,
-    updatedDate,
+    updatedAt,
     updatedBy,
-    f_accountNumber,
+    accountNumber,
   };
 }
