@@ -4,7 +4,7 @@ module.exports = model;
 
 function model(sequelize) {
   const attributes = {
-    accountNumber: { type: DataTypes.STRING, allowNull: false },
+    accountNumber: { type: DataTypes.STRING, primaryKey: true },
     accountName: { type: DataTypes.STRING, allowNull: false },
     openDate: { type: DataTypes.DATE, allowNull: true },
     debtorAge: { type: DataTypes.INTEGER, allowNull: true },
@@ -32,6 +32,10 @@ function model(sequelize) {
     arg: { type: DataTypes.STRING, allowNull: true },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
+    f_customerRefNo: {
+      type: DataTypes.STRING,
+      references: { model: db.Customer, key: 'customerRefNo' },
+    },
   };
 
   /*const options = {

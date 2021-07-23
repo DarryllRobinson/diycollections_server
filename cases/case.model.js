@@ -4,7 +4,7 @@ module.exports = model;
 
 function model(sequelize) {
   const attributes = {
-    caseNumber: { type: DataTypes.INTEGER, allowNull: true },
+    caseNumber: { type: DataTypes.STRING, primaryKey: true },
     currentAssignment: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -34,6 +34,10 @@ function model(sequelize) {
     },
     reassignedBy: { type: DataTypes.STRING, allowNull: true },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
+    f_accountNumber: {
+      type: DataTypes.STRING,
+      references: { model: db.Account, key: 'accountNumber' },
+    },
   };
 
   /*const options = {

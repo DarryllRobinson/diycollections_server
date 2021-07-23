@@ -5,7 +5,7 @@ module.exports = model;
 function model(sequelize) {
   const attributes = {
     operatorShortCode: { type: DataTypes.STRING, allowNull: true },
-    customerRefNo: { type: DataTypes.STRING, allowNull: false },
+    customerRefNo: { type: DataTypes.STRING, primaryKey: true },
     customerName: { type: DataTypes.STRING, allowNull: false },
     customerEntity: { type: DataTypes.STRING, allowNull: false },
     regIdNumber: { type: DataTypes.STRING, allowNull: true },

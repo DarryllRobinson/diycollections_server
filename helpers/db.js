@@ -34,18 +34,54 @@ async function initialize() {
 
   // define relationships
   // add relationships for customers, accounts, contacts, cases and outcomes
-  db.Customer.hasMany(db.Account, { onDelete: 'CASCADE' });
+  db.Customer.hasMany(
+    db.Account,
+    {
+      foreignKey: 'f_customerRefNo',
+    },
+    { onDelete: 'CASCADE' }
+  );
 
-  db.Account.belongsTo(db.Customer);
-  db.Account.hasMany(db.Case, { onDelete: 'CASCADE' });
-  db.Account.hasOne(db.Contact, { onDelete: 'CASCADE' });
+  db.Account.belongsTo(db.Customer, {
+    foreignKey: 'f_customerRefNo',
+    targetKey: 'customerRefNo',
+  });
+  db.Account.hasMany(
+    db.Case,
+    {
+      foreignKey: 'f_accountNumber',
+    },
+    { onDelete: 'CASCADE' }
+  );
+  db.Account.hasOne(
+    db.Contact,
+    {
+      foreignKey: 'f_accountNumber',
+    },
+    { onDelete: 'CASCADE' }
+  );
 
-  db.Contact.belongsTo(db.Account);
+  db.Contact.belongsTo(db.Account, {
+    foreignKey: 'f_accountNumber',
+    targetKey: 'accountNumber',
+  });
 
-  db.Case.belongsTo(db.Account);
-  db.Case.hasMany(db.Outcome, { onDelete: 'CASCADE' });
+  db.Case.belongsTo(db.Account, {
+    foreignKey: 'f_accountNumber',
+    targetKey: 'accountNumber',
+  });
+  db.Case.hasMany(
+    db.Outcome,
+    {
+      foreignKey: 'f_caseNumber',
+    },
+    { onDelete: 'CASCADE' }
+  );
 
-  db.Outcome.belongsTo(db.Case);
+  db.Outcome.belongsTo(db.Case, {
+    foreignKey: 'f_caseNumber',
+    targetKey: 'caseNumber',
+  });
 
   db.User.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
   db.RefreshToken.belongsTo(db.User);

@@ -39,6 +39,10 @@ function model(sequelize) {
     dnc4: { type: DataTypes.STRING, allowNull: true },
     dnc5: { type: DataTypes.STRING, allowNull: true },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
+    f_accountNumber: {
+      type: DataTypes.STRING,
+      references: { model: db.Account, key: 'accountNumber' },
+    },
   };
 
   /*const options = {
