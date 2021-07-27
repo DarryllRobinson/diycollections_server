@@ -23,6 +23,7 @@ function getAll(req, res, next) {
 }
 
 function getById(req, res, next) {
+  // returns all outcomes based on caseNumber
   outcomeService
     .getById(req.params.id)
     .then((outcome) => (outcome ? res.json(outcome) : res.sendStatus(404)))
@@ -33,19 +34,18 @@ function createSchema(req, res, next) {
   const schema = Joi.object({
     outcomeStatus: Joi.string(),
     transactionType: Joi.string(),
-    numberCalled: Joi.string(),
-    emailUsed: Joi.string(),
+    //numberCalled: Joi.string(),
+    //emailUsed: Joi.string(),
     contactPerson: Joi.string(),
     outcomeResolution: Joi.string(),
     ptpDate: Joi.date(),
-    ptpAmount: Joi.number(),
+    ptpAmount: Joi.number().precision(2),
     debitResubmissionDate: Joi.date(),
-    debitResubmissionAmount: Joi.number(),
+    debitResubmissionAmount: Joi.number().precision(2),
     outcomeNotes: Joi.string(),
     nextSteps: Joi.string(),
-    createdDate: Joi.date().required(),
-    createdBy: Joi.string().required(),
-    f_caseId: Joi.string().required(),
+    createdBy: Joi.string(),
+    f_caseNumber: Joi.string(),
   });
   validateRequest(req, next, schema);
 }
@@ -65,7 +65,7 @@ function create(req, res, next) {
 }
 
 function updateSchema(req, res, next) {
-  const schemaRules = {
+  const schema = Joi.object({
     outcomeStatus: Joi.string(),
     transactionType: Joi.string(),
     numberCalled: Joi.string(),
@@ -73,15 +73,14 @@ function updateSchema(req, res, next) {
     contactPerson: Joi.string(),
     outcomeResolution: Joi.string(),
     ptpDate: Joi.date(),
-    ptpAmount: Joi.number(),
+    ptpAmount: Joi.number().precision(2),
     debitResubmissionDate: Joi.date(),
-    debitResubmissionAmount: Joi.number(),
+    debitResubmissionAmount: Joi.number().precision(2),
     outcomeNotes: Joi.string(),
     nextSteps: Joi.string(),
-    createdDate: Joi.date().required(),
     createdBy: Joi.string().required(),
-    f_caseId: Joi.string().required(),
-  };
+    f_caseNumber: Joi.string().required(),
+  });
   validateRequest(req, next, schema);
 }
 

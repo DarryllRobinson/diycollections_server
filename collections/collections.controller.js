@@ -5,7 +5,8 @@ const collectionService = require('./collection.service');
 
 // routes
 router.get('/', authorise(), getAll);
-router.get('/status', authorise(), getAllStatus);
+router.get('/:id', authorise(), getCollection);
+router.put('/:id', authorise(), updateCollection);
 
 module.exports = router;
 
@@ -16,9 +17,16 @@ function getAll(req, res, next) {
     .catch(next);
 }
 
-function getAllStatus(req, res, next) {
+function getCollection(req, res, next) {
   collectionService
-    .getAllStatus(status)
-    .then((collections) => res.json(collections))
+    .getCollection(req.params.id)
+    .then((collection) => res.json(collection))
+    .catch(next);
+}
+
+function updateCollection(req, res, next) {
+  collectionService
+    .updateCollection(req.params.id, req.body)
+    .then((collection) => res.json(collection))
     .catch(next);
 }

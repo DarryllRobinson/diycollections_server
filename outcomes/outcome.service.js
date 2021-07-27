@@ -15,8 +15,11 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const outcome = await getOutcome(id);
-  return basicDetails(outcome);
+  const outcomes = await db.Outcome.findAll({
+    where: { f_caseNumber: id },
+  });
+  //console.log('outcomes: ', JSON.stringify(outcomes));
+  return outcomes;
 }
 
 async function bulkCreate(params) {
@@ -96,6 +99,7 @@ function basicDetails(outcome) {
     caseId,
   } = outcome;
   return {
+    status: 'Ok',
     id,
     outcomeStatus,
     transactionType,

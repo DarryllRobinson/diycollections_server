@@ -15,8 +15,9 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const contact = await getContact(id);
-  return basicDetails(contact);
+  const contact = await db.Contact.findAll({ where: { f_accountNumber: id } });
+  //console.log('********************** contact: ' + JSON.stringify(contact));
+  return contact;
 }
 
 async function bulkCreate(params) {
@@ -46,15 +47,6 @@ async function create(params) {
 async function update(id, params) {
   const contact = await getContact(id);
 
-  // validate (if email was changed)
-  /*if (
-    params.name &&
-    contact.name !== params.name &&
-    (await db.Contact.findOne({ where: { name: params.name } }))
-  ) {
-    throw 'Contact "' + params.name + '" is already taken';
-  }*/
-
   // copy params to contact and save
   Object.assign(contact, params);
   contact.updated = Date.now();
@@ -71,8 +63,9 @@ async function _delete(id) {
 // helper functions
 
 async function getContact(id) {
-  const contact = await db.Contact.findByPk(id);
+  const contact = await db.Contact.findOne({ where: { f_accountNumber: id } });
   if (!contact) throw 'Contact not found';
+  //console.log('******************************** contact: ', contact);
   return contact;
 }
 

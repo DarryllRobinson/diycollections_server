@@ -43,7 +43,6 @@ function createSchema(req, res, next) {
     resolution: Joi.string(),
     caseReason: Joi.string(),
     lockedDatetime: Joi.date(),
-    createdDate: Joi.date().required(),
     createdBy: Joi.string().required(),
     reassignedDate: Joi.date(),
     reassignedBy: Joi.string(),
@@ -71,9 +70,9 @@ function create(req, res, next) {
 }
 
 function updateSchema(req, res, next) {
-  const schemaRules = {
-    caseNumber: Joi.string().required(),
-    currentAssignment: Joi.string().required(),
+  const schema = Joi.object({
+    caseNumber: Joi.string(),
+    currentAssignment: Joi.string(),
     initialAssignment: Joi.string(),
     caseNotes: Joi.string(),
     kamNotes: Joi.string(),
@@ -82,16 +81,15 @@ function updateSchema(req, res, next) {
     resolution: Joi.string(),
     caseReason: Joi.string(),
     lockedDatetime: Joi.date(),
-    createdDate: Joi.date().required(),
-    createdBy: Joi.string().required(),
+    createdBy: Joi.string(),
     reassignedDate: Joi.date(),
     reassignedBy: Joi.string(),
     reopenedDate: Joi.date(),
     reopenedBy: Joi.string(),
     updatedDate: Joi.date(),
     updatedBy: Joi.string(),
-    f_accountNumber: Joi.string().required(),
-  };
+    f_accountNumber: Joi.string(),
+  });
   validateRequest(req, next, schema);
 }
 

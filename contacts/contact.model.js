@@ -45,6 +45,8 @@ function model(sequelize) {
     },
   };
 
+  const options = {};
+
   /*const options = {
     // disable default timestamp fields (createdAt and updatedAt)
     timestamps: false,
@@ -58,6 +60,6 @@ function model(sequelize) {
     },
   };*/
 
-  //return sequelize.define('account', attributes, options);
-  return sequelize.define('contact', attributes);
+  return sequelize.define('contact', attributes, options);
+  //return sequelize.define('contact', attributes);
 }

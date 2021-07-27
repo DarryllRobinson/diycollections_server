@@ -90,7 +90,7 @@ function create(req, res, next) {
 }
 
 function updateSchema(req, res, next) {
-  const schemaRules = {
+  const schema = Joi.object({
     primaryContactName: Joi.string(),
     primaryContactNumber: Joi.string(),
     primaryContactEmail: Joi.string(),
@@ -125,12 +125,10 @@ function updateSchema(req, res, next) {
     dnc3: Joi.string(),
     dnc4: Joi.string(),
     dnc5: Joi.string(),
-    createdDate: Joi.date().required(),
-    createdBy: Joi.string().required(),
+    createdBy: Joi.string(),
     updatedDate: Joi.date(),
     updatedBy: Joi.string(),
-    f_accountNumber: Joi.string().required(),
-  };
+  });
   validateRequest(req, next, schema);
 }
 

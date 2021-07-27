@@ -2,22 +2,8 @@ const db = require('helpers/db');
 
 module.exports = {
   getAll,
+  getCollection,
 };
-
-/*
-Places.findById(req.params.id, {
-    include: [{
-        model: Reviews,
-        required: false,
-        include: [{
-            model: Users,
-            required: false
-        }]
-    }]
-}).then(function(place) {
-    // The rest of your logic here...
-});
-*/
 
 async function getAll() {
   const collections = await db.Customer.findAll({
@@ -53,14 +39,19 @@ async function getAll() {
   return collections.map((x) => collectionsFields(x));
 }
 
-async function getCollection() {
-  const collections = await db.Customer.findAll({
+async function getCollection(id) {
+  const collection = await db.Case.findAll({
     attributes: [
-      'customerName',
-      'customerEntity',
-      'regIdNumber',
-      'regIdStatus',
+      'caseNotes',
+      'caseNumber',
+      'currentAssignment',
+      'currentStatus',
+      'kamNotes',
+      'nextVisitDateTime',
+      'resolution',
+      'updatedBy',
     ],
+    where: { caseNumber: id },
     include: [
       {
         model: db.Account,
@@ -89,27 +80,27 @@ async function getCollection() {
         ],
         include: [
           {
-            model: db.Case,
-            attributes: [
-              'caseNotes',
-              'caseNumber',
-              'currentAssignment',
-              'currentStatus',
-              'kamNotes',
-              'nextVisitDateTime',
-              'resolution',
-              'updatedBy',
-            ],
-          },
-          {
             model: db.Contact,
             attributes: ['representativeName', 'representativeNumber'],
+          },
+        ],
+        include: [
+          {
+            model: db.Customer,
+            attributes: [
+              'customerEntity',
+              'customerName',
+              'regIdNumber',
+              'regIdStatus',
+            ],
           },
         ],
       },
     ],
   });
-  return collections.map((x) => queueFields(x));
+
+  //console.log('collection: ' + JSON.stringify(collection));
+  return collectionFields(collection);
 }
 
 async function getAllStatus(recordStatus) {
@@ -264,6 +255,51 @@ function collectionsFields(collection) {
     currentAssignment,
     currentStatus,
     nextVisitDateTime,
+    resolution,
+    updatedBy,
+  };
+}
+
+function collectionFields(collection) {
+  console.log('************** collection: ' + JSON.stringify(collection));
+  const [
+    {
+      caseNotes,
+      caseNumber,
+      currentAssignment,
+      currentStatus,
+      kamNotes,
+      nextVisitDateTime,
+      resolution,
+      updatedBy,
+      account: {
+        amountDue,
+        accountNumber,
+        creditLimit,
+        currentBalance,
+        debtorAge,
+        totalBalance,
+        customer: { customerEntity, customerName, regIdNumber },
+      },
+    },
+  ] = collection;
+
+  return {
+    customerEntity,
+    customerName,
+    regIdNumber,
+    amountDue,
+    accountNumber,
+    creditLimit,
+    currentBalance,
+    debtorAge,
+    totalBalance,
+    caseNotes,
+    caseNumber,
+    currentAssignment,
+    currentStatus,
+    nextVisitDateTime,
+    kamNotes,
     resolution,
     updatedBy,
   };
