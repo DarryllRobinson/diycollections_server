@@ -53,19 +53,11 @@ async function create(params) {
 async function update(id, params) {
   const account = await getAccount(id);
 
-  // validate (if email was changed)
-  if (
-    params.name &&
-    account.name !== params.name &&
-    (await db.Account.findOne({ where: { name: params.name } }))
-  ) {
-    throw 'Account "' + params.name + '" is already taken';
-  }
-
   // copy params to account and save
+  //console.log('******************************** account params: ', params);
   Object.assign(account, params);
   account.updated = Date.now();
-  await account.save();
+  const response = await account.save();
 
   return basicDetails(account);
 }

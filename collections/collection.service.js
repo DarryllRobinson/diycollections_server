@@ -29,6 +29,7 @@ async function getAll() {
               'currentStatus',
               'nextVisitDateTime',
               'resolution',
+              'updatedAt',
               'updatedBy',
             ],
           },
@@ -52,6 +53,7 @@ async function getCollection(id) {
       'updatedBy',
     ],
     where: { caseNumber: id },
+    include: [],
     include: [
       {
         model: db.Account,
@@ -83,8 +85,7 @@ async function getCollection(id) {
             model: db.Contact,
             attributes: ['representativeName', 'representativeNumber'],
           },
-        ],
-        include: [
+
           {
             model: db.Customer,
             attributes: [
@@ -234,6 +235,7 @@ function collectionsFields(collection) {
             currentStatus,
             nextVisitDateTime,
             resolution,
+            updatedAt,
             updatedBy,
           },
         ],
@@ -256,12 +258,13 @@ function collectionsFields(collection) {
     currentStatus,
     nextVisitDateTime,
     resolution,
+    updatedAt,
     updatedBy,
   };
 }
 
 function collectionFields(collection) {
-  console.log('************** collection: ' + JSON.stringify(collection));
+  //console.log('************** collection: ' + JSON.stringify(collection));
   const [
     {
       caseNotes,
@@ -274,11 +277,27 @@ function collectionFields(collection) {
       updatedBy,
       account: {
         amountDue,
+        accountNotes,
         accountNumber,
+        accountStatus,
         creditLimit,
         currentBalance,
+        days30,
+        days60,
+        days90,
+        days120,
+        days150,
+        days180,
+        days180Over,
         debtorAge,
+        debitOrderDate,
+        lastPaymentAmount,
+        lastPaymentDate,
+        lastPTPAmount,
+        lastPTPDate,
+        paymentDueDate,
         totalBalance,
+        contact: { representativeName, representativeNumber },
         customer: { customerEntity, customerName, regIdNumber },
       },
     },
@@ -288,11 +307,28 @@ function collectionFields(collection) {
     customerEntity,
     customerName,
     regIdNumber,
+    representativeName,
+    representativeNumber,
     amountDue,
+    accountNotes,
     accountNumber,
+    accountStatus,
     creditLimit,
     currentBalance,
+    days30,
+    days60,
+    days90,
+    days120,
+    days150,
+    days180,
+    days180Over,
     debtorAge,
+    debitOrderDate,
+    lastPaymentAmount,
+    lastPaymentDate,
+    lastPTPAmount,
+    lastPTPDate,
+    paymentDueDate,
     totalBalance,
     caseNotes,
     caseNumber,

@@ -108,9 +108,6 @@ function updateSchema(req, res, next) {
     createdBy: Joi.string(),
     updatedBy: Joi.string(),
   });
-  console.log(
-    '******************************** updateSchema schema = ' + schema
-  );
   validateRequest(req, next, schema);
 }
 
