@@ -20,6 +20,8 @@ module.exports = {
   getById,
   create,
   update,
+  deactivate,
+  reactivate,
   delete: _delete,
 };
 
@@ -163,6 +165,7 @@ async function resetPassword({ token, password }) {
 
 async function getAll() {
   const users = await db.User.findAll();
+  //console.log('users: ', users);
   return users.map((x) => basicDetails(x));
 }
 
@@ -214,6 +217,28 @@ async function update(id, params) {
   return basicDetails(user);
 }
 
+async function deactivate(id) {
+  const user = await getUser(id);
+
+  // change Active state on user and save
+  user.active = false;
+  user.updated = Date.now();
+  await user.save();
+
+  return { status: 'success' };
+}
+
+async function reactivate(id) {
+  const user = await getUser(id);
+
+  // change Active state on user and save
+  user.active = true;
+  user.updated = Date.now();
+  await user.save();
+
+  return { status: 'success' };
+}
+
 async function _delete(id) {
   const user = await getUser(id);
   await user.destroy();
@@ -259,26 +284,27 @@ function randomTokenString() {
 }
 
 function basicDetails(user) {
+  //console.log('user: ', user);
   const {
     id,
-    title,
     firstName,
     lastName,
     email,
     phone,
     role,
+    active,
     created,
     updated,
     isVerified,
   } = user;
   return {
     id,
-    title,
     firstName,
     lastName,
     email,
     phone,
     role,
+    active,
     created,
     updated,
     isVerified,

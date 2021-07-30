@@ -23,6 +23,8 @@ router.get('/', authorise(Role.Admin), getAll);
 router.get('/:id', authorise(), getById);
 router.post('/', authorise(Role.Admin), createSchema, create);
 router.put('/:id', authorise(), updateSchema, update);
+router.put('/deactivate/:id', authorise(), deactivate);
+router.put('/reactivate/:id', authorise(), reactivate);
 router.delete('/:id', authorise(), _delete);
 
 module.exports = router;
@@ -86,19 +88,20 @@ function revokeToken(req, res, next) {
 
 function registerSchema(req, res, next) {
   const schema = Joi.object({
-    title: Joi.string().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
     phone: Joi.string().required(),
-    password: Joi.string().min(6).required(),
+    password: Joi.string().min(8).required(),
     confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
-    acceptTerms: Joi.boolean().valid(true).required(),
+    role: Joi.string().required(),
+    active: Joi.boolean().required(),
   });
   validateRequest(req, next, schema);
 }
 
 function register(req, res, next) {
+  console.log('***************** register user req.body: ', req.body);
   userService
     .register(req.body)
     .then((newUser) => {
@@ -106,11 +109,13 @@ function register(req, res, next) {
         res.json({
           message:
             'Registration successful, please check your email for verification instructions',
+          status: 'success',
         });
       } else {
         res.json({
           message:
             'Registration unsuccessful, a user with the same email was found',
+          status: 'duplicate',
         });
       }
     })
@@ -204,7 +209,6 @@ function getById(req, res, next) {
 
 function createSchema(req, res, next) {
   const schema = Joi.object({
-    title: Joi.string().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
@@ -225,7 +229,6 @@ function create(req, res, next) {
 
 function updateSchema(req, res, next) {
   const schemaRules = {
-    title: Joi.string().empty(''),
     firstName: Joi.string().empty(''),
     lastName: Joi.string().empty(''),
     email: Joi.string().email().empty(''),
@@ -251,6 +254,20 @@ function update(req, res, next) {
 
   userService
     .update(req.params.id, req.body)
+    .then((user) => res.json(user))
+    .catch(next);
+}
+
+function deactivate(req, res, next) {
+  userService
+    .deactivate(req.params.id)
+    .then((user) => res.json(user))
+    .catch(next);
+}
+
+function reactivate(req, res, next) {
+  userService
+    .reactivate(req.params.id)
     .then((user) => res.json(user))
     .catch(next);
 }
