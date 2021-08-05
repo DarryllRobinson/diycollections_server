@@ -101,9 +101,8 @@ function registerSchema(req, res, next) {
 }
 
 function register(req, res, next) {
-  console.log('***************** register user req.body: ', req.body);
   userService
-    .register(req.body)
+    .register(req.body, req.get('origin'))
     .then((newUser) => {
       if (newUser) {
         res.json({
