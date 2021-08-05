@@ -129,7 +129,7 @@ async function forgotPassword({ email }, origin) {
   const user = await db.User.findOne({ where: { email } });
 
   // always return ok response to prevent email enumeration
-  if (!user) return;
+  if (!user) return { status: 'failed', message: 'User not found' };
 
   // create reset token that expires after 24 hours
   user.resetToken = randomTokenString();
@@ -331,8 +331,13 @@ async function sendVerificationEmail(user, origin) {
   });
 }
 
-async function sendAlreadyRegisteredEmail(email) {
-  const message = `<p>If you don't know your password you can reset it via the <code>/user/forgot-password</code> api route.</p>`;
+async function sendAlreadyRegisteredEmail(email, origin) {
+  let message;
+  if (origin) {
+    message = `<p>If you don't know your password, please visit the <a href="${origin}/users/forgot-password">forgot password</a> page.</p>`;
+  } else {
+    message = `<p>If you don't know your password, please reset it via the <code>/user/forgot-password</code> api route.</p>`;
+  }
 
   await sendEmail({
     to: email,
@@ -343,11 +348,16 @@ async function sendAlreadyRegisteredEmail(email) {
   });
 }
 
-async function sendPasswordResetEmail(user) {
-  //const resetUrl = `${origin}/user/reset-password?token=${user.resetToken}`;
-  const resetUrl = `user/reset-password?token=${user.resetToken}`;
-  const message = `<p>Please use the below token to reset your password with the <code>/user/reset-password</code> api route:</p>
-                   <p><code>${user.resetToken}</code></p>`;
+async function sendPasswordResetEmail(user, origin) {
+  let message;
+  if (origin) {
+    const resetUrl = `${origin}/users/reset-password?token=${user.resetToken}`;
+    message = `<p>Please click the link below to reset your password; the link is valid for one day:</p>
+              <p><a href="${resetUrl}">${resetUrl}</a></p>`;
+  } else {
+    message = `<p>Please use the token below to reset your password with the <code>/user/reset-password</code> api route:</p>
+              <p><code>${user.resetToken}</code></p>`;
+  }
 
   await sendEmail({
     to: user.email,

@@ -146,12 +146,19 @@ function forgotPasswordSchema(req, res, next) {
 
 function forgotPassword(req, res, next) {
   userService
-    .forgotPassword(req.body)
-    .then(() =>
-      res.json({
-        message: 'Please check your email for password reset instructions',
-      })
-    )
+    .forgotPassword(req.body, req.get('origin'))
+    .then((response) => {
+      //console.log('response: ', response);
+      if (response === undefined) {
+        console.log('returning from here');
+        res.json({
+          status: 'ok',
+          message: 'Please check your email for password reset instructions',
+        });
+      } else if (response.status === 'failed') {
+        res.json({ status: 'failed', message: 'User not found.' });
+      }
+    })
     .catch(next);
 }
 
