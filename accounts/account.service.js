@@ -77,7 +77,6 @@ async function getAccount(id) {
 
 function basicDetails(account) {
   const {
-    id,
     accountNumber,
     accountName,
     openDate,
@@ -108,10 +107,9 @@ function basicDetails(account) {
     createdBy,
     updatedAt,
     updatedBy,
-    customerId,
+    f_customerRefNo,
   } = account;
   return {
-    id,
     accountNumber,
     accountName,
     openDate,
@@ -142,6 +140,6 @@ function basicDetails(account) {
     createdBy,
     updatedAt,
     updatedBy,
-    customerId,
+    f_customerRefNo,
   };
 }
