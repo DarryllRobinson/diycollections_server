@@ -2,9 +2,21 @@
   "name": "diycollections_server",
   "version": "1.0.0",
   "description": "MYSQL server for diycollections",
+  "main": "./src/server.js",
+  "bin": "./src/server.js",
   "scripts": {
     "start": "node ./server.js",
-    "start:dev": "REACT_APP_STAGE='development' nodemon ./server.js"
+    "start:dev": "REACT_APP_STAGE='development' nodemon ./src/server.js"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*",
+      "src/**/*"
+    ],
+    "targets": [
+      "node13-linux-x64"
+    ],
+    "outputPath": "build"
   },
   "repository": {
     "type": "git",
@@ -33,6 +45,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.6.2",
+    "pkg": "^5.3.1",
     "rootpath": "^0.1.2",
     "sequelize": "^6.6.5",
     "swagger-ui-express": "^4.1.6",
