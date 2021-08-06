@@ -150,7 +150,6 @@ function forgotPassword(req, res, next) {
     .then((response) => {
       //console.log('response: ', response);
       if (response === undefined) {
-        console.log('returning from here');
         res.json({
           status: 'ok',
           message: 'Please check your email for password reset instructions',

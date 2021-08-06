@@ -1,6 +1,27 @@
-const config = require('config.json');
+const dbConfig = require('config.js');
 const mysql = require('mysql2/promise');
 const { Sequelize } = require('sequelize');
+
+// Determine which config to use for which environment
+let config;
+
+switch (process.env.REACT_APP_STAGE) {
+  case 'development':
+    config = dbConfig.devConfig;
+    break;
+  case 'sit':
+    config = dbConfig.sitConfig;
+    break;
+  case 'uat':
+    config = dbConfig.uatConfig;
+    break;
+  case 'production':
+    config = dbConfig.prodConfig;
+    break;
+  default:
+    config = dbConfig.devConfig;
+    break;
+}
 
 module.exports = db = {};
 
@@ -8,7 +29,9 @@ initialize();
 
 async function initialize() {
   // create db if it doesn't already exist
-  const { host, port, user, password, database } = config.database;
+  console.log('REACT_APP_STAGE: ', process.env.REACT_APP_STAGE);
+  //console.log('Creating db with config: ', config);
+  const { host, port, user, password, database } = config;
   const connection = await mysql.createConnection({
     host,
     port,

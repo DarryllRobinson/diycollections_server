@@ -2,6 +2,7 @@
 
 # Config - including secrets
 config.json
+config.js
 
 # Logs
 logs
