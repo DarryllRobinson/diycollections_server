@@ -1004,37 +1004,37 @@ paths:
                     type: integer
                     example: 60
                   creditLimit:
-                    type: integer
+                    type: number
                     example: 1500.00
                   totalBalance:
-                    type: integer
+                    type: number
                     example: 1000.00
                   amountDue:
-                    type: integer
+                    type: number
                     example: 1500.00
                   currentBalance:
-                    type: integer
+                    type: number
                     example: 1000.00
                   days30:
-                    type: integer
+                    type: number
                     example: 30.00
                   days60:
-                    type: integer
+                    type: number
                     example: 60.00
                   days90:
-                    type: integer
+                    type: number
                     example: 90.00
                   days120:
-                    type: integer
+                    type: number
                     example: 120.00
                   days150:
-                    type: integer
+                    type: number
                     example: 150.00
                   days180:
-                    type: integer
+                    type: number
                     example: 180.00
                   days180Over:
-                    type: integer
+                    type: number
                     example: 200.00
                   paymentMethod:
                     type: string
@@ -1053,7 +1053,7 @@ paths:
                     pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
                     example: 20190816
                   lastPaymentAmount:
-                    type: integer
+                    type: number
                     example: 2016.00
                   lastPTPDate:
                     type: string
@@ -1063,7 +1063,7 @@ paths:
                     pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
                     example: 20190816
                   lastPTPAmount:
-                    type: integer
+                    type: number
                     example: 1016.00
                   accountNotes:
                     type: string
@@ -1074,21 +1074,23 @@ paths:
                   arg:
                     type: string
                     example: 'A1'
-                  createdDate:
+                  createdAt:
                     type: string
                     example: '2020-05-05T09:12:57.848Z'
                   createdBy:
                     type: string
                     example: 'mickey@example.com'
-                  updatedDate:
+                  updatedAt:
                     type: string
                     example: '2020-05-08T03:11:21.553Z'
                   updatedBy:
                     type: string
                     example: 'mickey@example.com'
-                  f_customerId:
+                  f_customerRefNo:
                     type: string
                     example: 'AAA101'
+              required:
+                - accountNumber
         '404':
           $ref: '#/components/responses/NotFoundError'
         '401':
@@ -1096,7 +1098,7 @@ paths:
     put:
       summary: Update an account
       description: Update details of an account.
-      operationId: updateAccount
+      operationId: update
       security:
         - bearerAuth: []
       requestBody:
@@ -1106,9 +1108,6 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
-                  example: 123
                 accountNumber:
                   type: string
                   example: 'AAA001'
@@ -1130,37 +1129,37 @@ paths:
                   type: integer
                   example: 60
                 creditLimit:
-                  type: integer
+                  type: number
                   example: 1500.00
                 totalBalance:
-                  type: integer
+                  type: number
                   example: 1000.00
                 amountDue:
-                  type: integer
+                  type: number
                   example: 1500.00
                 currentBalance:
-                  type: integer
+                  type: number
                   example: 1000.00
                 days30:
-                  type: integer
+                  type: number
                   example: 30.00
                 days60:
-                  type: integer
+                  type: number
                   example: 60.00
                 days90:
-                  type: integer
+                  type: number
                   example: 90.00
                 days120:
-                  type: integer
+                  type: number
                   example: 120.00
                 days150:
-                  type: integer
+                  type: number
                   example: 150.00
                 days180:
-                  type: integer
+                  type: number
                   example: 180.00
                 days180Over:
-                  type: integer
+                  type: number
                   example: 200.00
                 paymentMethod:
                   type: string
@@ -1179,7 +1178,7 @@ paths:
                   pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
                   example: 20190816
                 lastPaymentAmount:
-                  type: integer
+                  type: number
                   example: 2016.00
                 lastPTPDate:
                   type: string
@@ -1189,7 +1188,7 @@ paths:
                   pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
                   example: 20190816
                 lastPTPAmount:
-                  type: integer
+                  type: number
                   example: 1016.00
                 accountNotes:
                   type: string
@@ -1200,21 +1199,24 @@ paths:
                 arg:
                   type: string
                   example: 'A1'
-                createdDate:
+                createdAt:
                   type: string
                   example: '2020-05-05T09:12:57.848Z'
                 createdBy:
                   type: string
                   example: 'mickey@example.com'
-                updatedDate:
+                updatedAt:
                   type: string
                   example: '2020-05-08T03:11:21.553Z'
                 updatedBy:
                   type: string
                   example: 'mickey@example.com'
-                f_customerId:
+                f_customerRefNo:
                   type: string
                   example: 'AAA101'
+            required:
+              - accountNumber
+              - updatedBy
       responses:
         '200':
           description: Account updated successfully. The details of the updated account are returned.
@@ -1223,9 +1225,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                    example: 123
                   accountNumber:
                     type: string
                     example: 'AAA001'
@@ -1247,37 +1246,37 @@ paths:
                     type: integer
                     example: 60
                   creditLimit:
-                    type: integer
+                    type: number
                     example: 1500.00
                   totalBalance:
-                    type: integer
+                    type: number
                     example: 1000.00
                   amountDue:
-                    type: integer
+                    type: number
                     example: 1500.00
                   currentBalance:
-                    type: integer
+                    type: number
                     example: 1000.00
                   days30:
-                    type: integer
+                    type: number
                     example: 30.00
                   days60:
-                    type: integer
+                    type: number
                     example: 60.00
                   days90:
-                    type: integer
+                    type: number
                     example: 90.00
                   days120:
-                    type: integer
+                    type: number
                     example: 120.00
                   days150:
-                    type: integer
+                    type: number
                     example: 150.00
                   days180:
-                    type: integer
+                    type: number
                     example: 180.00
                   days180Over:
-                    type: integer
+                    type: number
                     example: 200.00
                   paymentMethod:
                     type: string
@@ -1296,7 +1295,7 @@ paths:
                     pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
                     example: 20190816
                   lastPaymentAmount:
-                    type: integer
+                    type: number
                     example: 2016.00
                   lastPTPDate:
                     type: string
@@ -1306,7 +1305,7 @@ paths:
                     pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$'
                     example: 20190816
                   lastPTPAmount:
-                    type: integer
+                    type: number
                     example: 1016.00
                   accountNotes:
                     type: string
@@ -1317,19 +1316,19 @@ paths:
                   arg:
                     type: string
                     example: 'A1'
-                  createdDate:
+                  createdAt:
                     type: string
                     example: '2020-05-05T09:12:57.848Z'
                   createdBy:
                     type: string
                     example: 'mickey@example.com'
-                  updatedDate:
+                  updatedAt:
                     type: string
                     example: '2020-05-08T03:11:21.553Z'
                   updatedBy:
                     type: string
                     example: 'mickey@example.com'
-                  f_customerId:
+                  f_customerRefNo:
                     type: string
                     example: 'AAA101'
         '404':
@@ -1339,7 +1338,7 @@ paths:
     delete:
       summary: Delete an account
       description: Delete an account.
-      operationId: deleteAccount
+      operationId: delete
       security:
         - bearerAuth: []
       responses:
