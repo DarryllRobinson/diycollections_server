@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const validateRequest = require('middleware/validate-request');
-const authorise = require('middleware/authorise');
-const Role = require('helpers/role');
+const validateRequest = require('../middleware/validate-request');
+const authorise = require('../middleware/authorise');
+const Role = require('../helpers/role');
 const customerService = require('./customer.service');
 
 // routes

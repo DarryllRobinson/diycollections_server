@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authorise = require('middleware/authorise');
+const authorise = require('../middleware/authorise');
 const reportService = require('./report.service');
 
 // routes

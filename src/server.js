@@ -34,12 +34,29 @@ app.use('/api/reports', require('./reports/reports.controller'));
 app.use('/api/users', require('./users/users.controller'));
 
 // swagger docs route
-app.use('/api/api-docs', require('helpers/swagger'));
+app.use('/api/api-docs', require('./helpers/swagger'));
 
 // global error handler
 app.use(errorHandler);
 
 // start server
-const port =
-  process.env.NODE_ENV === 'production' ? process.env.PORT || 80 : 4000;
+let port = 0;
+switch (process.env.REACT_APP_STAGE) {
+  case 'development':
+    port = 4000;
+    break;
+  case 'production':
+    port = 8081;
+    break;
+  case 'sit':
+    port = 8082;
+    break;
+  case 'uat':
+    port = 8083;
+    break;
+  default:
+    port = 0;
+    break;
+}
+
 app.listen(port, () => console.log('Server listening on port ' + port));

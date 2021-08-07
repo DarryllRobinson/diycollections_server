@@ -3677,30 +3677,30 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorisedError'
 
-  components:
-    securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-    responses:
-      UnauthorisedError:
-        description: Access token is missing or invalid, or the user does not have access to perform the action
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: 'Unauthorised'
-      NotFoundError:
-        description: Not Found
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: 'Not Found'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorisedError:
+      description: Access token is missing or invalid, or the user does not have access to perform the action
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Unauthorised'
+    NotFoundError:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Not Found'

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const validateRequest = require('middleware/validate-request');
-const authorise = require('middleware/authorise');
-const Role = require('helpers/role');
+const validateRequest = require('../middleware/validate-request');
+const authorise = require('../middleware/authorise');
+const Role = require('../helpers/role');
 const userService = require('./user.service');
 
 // routes
@@ -154,8 +154,8 @@ function forgotPassword(req, res, next) {
           status: 'ok',
           message: 'Please check your email for password reset instructions',
         });
-      } else if (response.status === 'failed') {
-        res.json({ status: 'failed', message: 'User not found.' });
+      } else if (response.status !== 'ok') {
+        res.json(response);
       }
     })
     .catch(next);

@@ -1,11 +1,11 @@
-const config = require('config.json');
+const config = require('../helpers/config.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { Op } = require('sequelize');
-const sendEmail = require('helpers/send-email');
-const db = require('helpers/db');
-const Role = require('helpers/role');
+const sendEmail = require('../helpers/send-email');
+const db = require('../helpers/db');
+const Role = require('../helpers/role');
 
 module.exports = {
   authenticate,
@@ -98,8 +98,8 @@ async function register(params, origin) {
   const user = new db.User(params);
 
   // first registered user is an admin
-  const isFirstUser = (await db.User.count()) === 0;
-  user.role = isFirstUser ? Role.Admin : Role.User;
+  //const isFirstUser = (await db.User.count()) === 0;
+  //user.role = isFirstUser ? Role.Admin : Role.User;
   user.verificationToken = randomTokenString();
 
   // hash password
@@ -127,9 +127,17 @@ async function verifyEmail({ token }) {
 
 async function forgotPassword({ email }, origin) {
   const user = await db.User.findOne({ where: { email } });
+  //console.log('user: ', user);
 
   // always return ok response to prevent email enumeration
-  if (!user) return { status: 'failed', message: 'User not found' };
+  if (!user) {
+    console.log('User not found');
+    return { status: 'failed', message: 'User not found' };
+  }
+  if (!user.active) {
+    console.log('User inactive');
+    return { status: 'failed', message: 'User is deactivated' };
+  }
 
   // create reset token that expires after 24 hours
   user.resetToken = randomTokenString();

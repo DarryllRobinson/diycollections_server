@@ -1,5 +1,5 @@
 const jwt = require('express-jwt');
-const { secret } = require('config.json');
+const { secret } = require('../helpers/config.js');
 const db = require('../helpers/db');
 
 module.exports = authorise;
@@ -19,8 +19,12 @@ function authorise(roles = []) {
     async (req, res, next) => {
       const user = await db.User.findByPk(req.user.id);
 
-      if (!user || (roles.length && !roles.includes(user.role))) {
-        // user no longer exists or role not authorised
+      if (
+        !user ||
+        (roles.length && !roles.includes(user.role)) ||
+        !user.active
+      ) {
+        // user no longer exists or role not authorised or user is deactivated
         return res.status(401).json({ message: 'Unauthorised' });
       }
 
