@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('./middleware/error-handler');
+const crons = require('./crons/cron.jobs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

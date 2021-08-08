@@ -16,6 +16,7 @@ module.exports = {
   forgotPassword,
   validateResetToken,
   resetPassword,
+  setPassword,
   getAll,
   getById,
   create,
@@ -47,6 +48,36 @@ async function authenticate({ email, password, ipAddress }) {
 
   // return basic details and tokens
   return {
+    ...basicDetails(user),
+    jwtToken,
+    refreshToken: refreshToken.token,
+  };
+}
+
+async function newauthenticate({ email, password, ipAddress }) {
+  const user = await db.User.scope('withHash').findOne({
+    where: { email },
+  });
+
+  if (
+    !user ||
+    !user.isVerified ||
+    !(await bcrypt.compare(password, user.passwordHash))
+  ) {
+    //throw 'Email or password is incorrect';
+    return { status: 'Error', message: 'Email or password is incorrect' };
+  }
+
+  // authentication successful so generate jwt and refresh tokens
+  const jwtToken = generateJwtToken(user);
+  const refreshToken = generateRefreshToken(user, ipAddress);
+
+  // save refresh token
+  await refreshToken.save();
+
+  // return basic details and tokens
+  return {
+    status: 'success',
     ...basicDetails(user),
     jwtToken,
     refreshToken: refreshToken.token,
@@ -96,14 +127,7 @@ async function register(params, origin) {
 
   // create user object
   const user = new db.User(params);
-
-  // first registered user is an admin
-  //const isFirstUser = (await db.User.count()) === 0;
-  //user.role = isFirstUser ? Role.Admin : Role.User;
   user.verificationToken = randomTokenString();
-
-  // hash password
-  user.passwordHash = await hash(params.password);
 
   // save user
   await user.save();
@@ -121,7 +145,6 @@ async function verifyEmail({ token }) {
   if (!user) throw 'Verification failed';
 
   user.verified = Date.now();
-  user.verificationToken = null;
   await user.save();
 }
 
@@ -168,6 +191,19 @@ async function resetPassword({ token, password }) {
   user.passwordHash = await hash(password);
   user.passwordReset = Date.now();
   user.resetToken = null;
+  await user.save();
+}
+
+async function setPassword({ token, password }) {
+  const user = await db.User.findOne({
+    where: { verificationToken: token },
+  });
+
+  if (!user) throw 'Verification failed';
+
+  // set password and remove verification token
+  user.passwordHash = await hash(password);
+  user.verificationToken = null;
   await user.save();
 }
 

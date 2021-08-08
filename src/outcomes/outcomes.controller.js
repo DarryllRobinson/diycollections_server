@@ -18,7 +18,9 @@ module.exports = router;
 function getAll(req, res, next) {
   outcomeService
     .getAll()
-    .then((outcomes) => res.json(outcomes))
+    .then((outcomes) => {
+      res.json(outcomes);
+    })
     .catch(next);
 }
 
@@ -26,7 +28,9 @@ function getById(req, res, next) {
   // returns all outcomes based on caseNumber
   outcomeService
     .getById(req.params.id)
-    .then((outcome) => (outcome ? res.json(outcome) : res.sendStatus(404)))
+    .then((outcome) => {
+      outcome ? res.json(outcome) : res.sendStatus(404);
+    })
     .catch(next);
 }
 

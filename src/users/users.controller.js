@@ -19,7 +19,8 @@ router.post(
   validateResetToken
 );
 router.post('/reset-password', resetPasswordSchema, resetPassword);
-router.get('/', authorise(Role.Admin), getAll);
+router.post('/set-password', setPasswordSchema, setPassword);
+router.get('/', authorise(), getAll);
 router.get('/:id', authorise(), getById);
 router.post('/', authorise(Role.Admin), createSchema, create);
 router.put('/:id', authorise(), updateSchema, update);
@@ -45,6 +46,25 @@ function authenticate(req, res, next) {
     .then(({ refreshToken, ...user }) => {
       setTokenCookie(res, refreshToken);
       res.json(user);
+    })
+    .catch(next);
+}
+
+function newauthenticate(req, res, next) {
+  const { email, password } = req.body;
+  const ipAddress = req.ip;
+  userService
+    .authenticate({ email, password, ipAddress })
+    .then((response) => {
+      if (response.status === 'Error') {
+        console.log('failed');
+        res.json(response);
+      } else if (response.status === 'success') {
+        const { refreshToken, ...user } = response;
+        //.then(({ refreshToken, ...user }) => {
+        setTokenCookie(res, refreshToken);
+        res.json(user);
+      }
     })
     .catch(next);
 }
@@ -92,8 +112,8 @@ function registerSchema(req, res, next) {
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
     phone: Joi.string().required(),
-    password: Joi.string().min(8).required(),
-    confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+    //password: Joi.string().min(8),
+    //confirmPassword: Joi.string().valid(Joi.ref('password')),
     role: Joi.string().required(),
     active: Joi.boolean().required(),
   });
@@ -193,6 +213,24 @@ function resetPassword(req, res, next) {
     .catch(next);
 }
 
+function setPasswordSchema(req, res, next) {
+  const schema = Joi.object({
+    token: Joi.string().required(),
+    password: Joi.string().min(8).required(),
+    confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+  });
+  validateRequest(req, next, schema);
+}
+
+function setPassword(req, res, next) {
+  userService
+    .setPassword(req.body)
+    .then(() =>
+      res.json({ message: 'Password set successful, you can now login' })
+    )
+    .catch(next);
+}
+
 function getAll(req, res, next) {
   userService
     .getAll()
@@ -218,8 +256,8 @@ function createSchema(req, res, next) {
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
     phone: Joi.string().required(),
-    password: Joi.string().min(6).required(),
-    confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+    password: Joi.string().min(8),
+    confirmPassword: Joi.string().valid(Joi.ref('password')),
     role: Joi.string().valid(Role.Admin, Role.User).required(),
   });
   validateRequest(req, next, schema);
