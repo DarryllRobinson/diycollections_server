@@ -276,14 +276,14 @@ function updateSchema(req, res, next) {
     lastName: Joi.string().empty(''),
     email: Joi.string().email().empty(''),
     phone: Joi.string().empty(),
-    password: Joi.string().min(6).empty(''),
+    password: Joi.string().min(8).empty(''),
     confirmPassword: Joi.string().valid(Joi.ref('password')).empty(''),
   };
 
   // only admins can update role
-  if (req.user.role === Role.Admin) {
+  /*if (req.user.role === Role.Admin) {
     schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty('');
-  }
+  }*/
 
   const schema = Joi.object(schemaRules).with('password', 'confirmPassword');
   validateRequest(req, next, schema);
@@ -291,7 +291,7 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
   // users can update their own user and admins can update any user
-  if (Number(req.params.id) !== req.user.id && req.user.role !== Role.Admin) {
+  if (Number(req.params.id) !== req.user.id) {
     return res.status(401).json({ message: 'Unauthorised' });
   }
 
