@@ -32,26 +32,13 @@ async function initialize() {
   console.log('REACT_APP_STAGE: ', process.env.REACT_APP_STAGE);
   //console.log('Creating db with config: ', config);
   const { host, port, user, password, database } = config;
-  const pool = await mysql.createPool({
+  const connection = await mysql.createConnection({
     host,
     port,
     user,
     password,
   });
-
-  pool.getConnection((err, connection) => {
-    if (err) throw err;
-    console.log('!!!!!!!!!!!!!!!!! Connected as id ', connection.threadId);
-
-    connection.query(
-      `CREATE DATABASE IF NOT EXISTS \`${database}\`;`,
-      (err, result) => {
-        connection.release();
-        if (err) throw err;
-        console.log('connection.query: ', result);
-      }
-    );
-  });
+  await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
 
   // connect to db
   const sequelize = new Sequelize(database, user, password, {
@@ -123,5 +110,5 @@ async function initialize() {
   db.RefreshToken.belongsTo(db.User);
 
   // sync all models with database
-  //await sequelize.sync();
+  await sequelize.sync();
 }

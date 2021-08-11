@@ -10,8 +10,12 @@ module.exports = {
 };
 
 async function getAll() {
-  const customers = await db.Customer.findAll();
-  return customers.map((x) => basicDetails(x));
+  try {
+    const customers = await db.Customer.findAll();
+    return customers.map((x) => basicDetails(x));
+  } catch (err) {
+    console.log('customerService.getAll error: ', err);
+  }
 }
 
 async function getById(id) {
@@ -82,7 +86,6 @@ async function getCustomer(id) {
 
 function basicDetails(customer) {
   const {
-    id,
     operatorShortCode,
     customerRefNo,
     customerName,
@@ -95,9 +98,9 @@ function basicDetails(customer) {
     address3,
     address4,
     address5,
-    createdDate,
+    createdAt,
     createdBy,
-    updatedDate,
+    updatedAt,
     updatedBy,
     closedDate,
     closedBy,
@@ -105,7 +108,6 @@ function basicDetails(customer) {
     f_clientId,
   } = customer;
   return {
-    id,
     operatorShortCode,
     customerRefNo,
     customerName,
@@ -118,9 +120,9 @@ function basicDetails(customer) {
     address3,
     address4,
     address5,
-    createdDate,
+    createdAt,
     createdBy,
-    updatedDate,
+    updatedAt,
     updatedBy,
     closedDate,
     closedBy,
