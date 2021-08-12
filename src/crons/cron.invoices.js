@@ -92,7 +92,7 @@ const invoiceLineItems = [
 ];
 
 setTimeout(() => {
-  //runInvoices();
+  runInvoices();
 }, 5000);
 
 async function runInvoices() {
