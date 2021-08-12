@@ -86,6 +86,36 @@ function header(doc, record) {
     .text(`2125`, 180, 90)
     .text(`Centurion`, 390, 90)
     .text(`0157`, 390, 105);
+
+  doc
+    .fontSize(8)
+    .text('INVOICE TO: XXXX Limited', 30, 30)
+    .text('DELIVER TO: XXXX Limited', 180, 30)
+    .text('Managed Integrity Evaluation (MIE)', 390, 30)
+    .text('XXXX Limited', 30, 45)
+    .text('XXXX Group', 180, 45)
+    .text('Building 2', 390, 45)
+    .text('P.O. Box 0000', 30, 60)
+    .text('P.O. Box 509741', 180, 60)
+    .text('Jean Park Chambers', 390, 60)
+    .text('Randburg', 30, 75)
+    .text('Randburg', 180, 75)
+    .text('252 Jean Avenue', 390, 75)
+    .text('2125', 30, 90)
+    .text('2125', 180, 90)
+    .text('Centurion', 390, 90)
+    .text('0157', 390, 105);
+
+  doc.text('VAT No. 400000', 30, 130);
+  doc.text('DFI 46100000', 110, 130, { align: 'left' });
+  doc.text('DATE', 180, 130);
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 150)
+    .lineTo(600, 150)
+    .stroke();
 }
 
 function setItems(item) {
