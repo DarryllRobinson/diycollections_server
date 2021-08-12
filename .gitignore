@@ -12,6 +12,9 @@ npm-debug.log*
 # Invoices
 /src/crons/invoices
 
+# Assets
+/src/assets
+
 # dependencies
 /node_modules
 /.pnp
