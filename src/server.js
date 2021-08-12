@@ -8,6 +8,8 @@ const errorHandler = require('./middleware/error-handler');
 const cronJobs = require('./crons/cron.jobs');
 const cronInvoices = require('./crons/cron.invoices');
 
+app.use(express.static(__dirname + '/assets'));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
