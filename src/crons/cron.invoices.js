@@ -7,7 +7,7 @@ const sendEmail = require('../helpers/send-email');
 const createFolder = require('../helpers/create-folder');
 
 setTimeout(() => {
-  runInvoices();
+  //runInvoices();
 }, 5000);
 
 async function runInvoices() {
@@ -106,16 +106,109 @@ function header(doc, record) {
     .text('Centurion', 390, 90)
     .text('0157', 390, 105);
 
-  doc.text('VAT No. 400000', 30, 130);
-  doc.text('DFI 46100000', 110, 130, { align: 'left' });
-  doc.text('DATE', 180, 130);
+  doc.text('VAT No. 400000', 30, 120);
 
   doc
     .strokeColor('#aaaaaa')
     .lineWidth(1)
-    .moveTo(10, 150)
-    .lineTo(600, 150)
+    .moveTo(10, 130)
+    .lineTo(600, 130)
     .stroke();
+
+  doc.text('Inv. No.', 30, 135, { align: 'left' });
+  doc.text('DFI 46100000', 110, 135, { align: 'left' });
+  doc.text('DATE', 180, 135);
+  doc.text('13 AUG 2021', 250, 135);
+  doc.text('CUST. No.', 330, 135);
+  doc.text('CXXXX0001', 400, 135);
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 145)
+    .lineTo(600, 145)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 147)
+    .lineTo(600, 147)
+    .stroke();
+
+  doc.text('CUST. ORDER', 30, 150, { align: 'left' });
+  doc.text('PROJECT', 180, 150, { align: 'left' });
+  doc.text('INV. CONTACT', 330, 150);
+  doc.text('Danny Hlabatau', 400, 150);
+
+  doc.text('REF. A', 30, 160);
+  doc.text('12345', 110, 160);
+  doc.text('CONTRACT', 180, 160);
+  doc.text('BUS CONTACT', 330, 160);
+  doc.text('REF. B', 30, 170);
+  doc.text('None', 110, 170);
+  doc.text('END CUST.', 180, 170);
+  doc.text('SALES AREA', 330, 170);
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 180)
+    .lineTo(600, 180)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 182)
+    .lineTo(600, 182)
+    .stroke();
+
+  // Vertical lines
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(100, 130)
+    .lineTo(100, 180)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(170, 130)
+    .lineTo(170, 180)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(240, 130)
+    .lineTo(240, 180)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(320, 130)
+    .lineTo(320, 180)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(390, 130)
+    .lineTo(390, 180)
+    .stroke();
+
+  // Line items
+  doc.text('Line', 30, 185);
+  doc.text('Code', 70, 185);
+  doc.text('Description', 110, 185);
+  doc.text('Qty', 300, 185);
+  doc.text('Unit', 330, 185);
+  doc.text('Unit Price', 360, 185);
+  doc.text('Nett Price', 490, 185);
 }
 
 function setItems(item) {

@@ -17,12 +17,13 @@ module.exports = {
   validateResetToken,
   resetPassword,
   setPassword,
+  deactivate,
+  reactivate,
+  resendInvitation,
   getAll,
   getById,
   create,
   update,
-  deactivate,
-  reactivate,
   delete: _delete,
 };
 
@@ -261,6 +262,18 @@ async function update(id, params) {
   return basicDetails(user);
 }
 
+async function resendInvitation(id, origin) {
+  const user = await getUser(id);
+
+  user.updated = Date.now();
+  user.verificationToken = randomTokenString();
+  await user.save();
+
+  // send email
+  await sendVerificationEmail(user, origin);
+  return true;
+}
+
 async function deactivate(id) {
   const user = await getUser(id);
 
@@ -356,6 +369,7 @@ function basicDetails(user) {
 }
 
 async function sendVerificationEmail(user, origin) {
+  //console.log('sendVerificationEmail', user, origin);
   let message;
   if (origin) {
     const verifyUrl = `${origin}/users/verify-email?token=${user.verificationToken}`;

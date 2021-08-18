@@ -24,7 +24,6 @@ function authorise(roles = []) {
         (roles.length && !roles.includes(user.role)) ||
         !user.active
       ) {
-        console.log('Unauthorised');
         // user no longer exists or role not authorised or user is deactivated
         return res.status(401).json({ message: 'Unauthorised' });
       }

@@ -7,7 +7,7 @@ module.exports = {
 
 async function getAll() {
   const collections = await db.Customer.findAll({
-    attributes: ['customerName', 'regIdNumber'],
+    attributes: ['customerRefNo', 'customerName', 'regIdNumber'],
     include: [
       {
         model: db.Account,
@@ -217,6 +217,7 @@ function queueFields(collection) {
 function collectionsFields(collection) {
   //console.log('collection: ' + JSON.stringify(collection));
   const {
+    customerRefNo,
     customerName,
     regIdNumber,
     accounts: [
@@ -244,6 +245,7 @@ function collectionsFields(collection) {
   } = collection;
 
   return {
+    customerRefNo,
     customerName,
     regIdNumber,
     amountDue,

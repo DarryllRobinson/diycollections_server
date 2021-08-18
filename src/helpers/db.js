@@ -54,6 +54,7 @@ async function initialize() {
   });
 
   // connect to db
+  console.log('connect to db: ', database);
   const sequelize = new Sequelize(database, user, password, {
     dialect: 'mysql',
     dialectOptions: { decimalNumbers: true },
@@ -123,5 +124,5 @@ async function initialize() {
   db.RefreshToken.belongsTo(db.User);
 
   // sync all models with database
-  //await sequelize.sync();
+  await sequelize.sync();
 }

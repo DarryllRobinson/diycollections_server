@@ -11,6 +11,7 @@ router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorise(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
+router.post('/resend-invitation/:id', resendInvitation);
 router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post(
@@ -137,6 +138,19 @@ function register(req, res, next) {
           status: 'duplicate',
         });
       }
+    })
+    .catch(next);
+}
+
+function resendInvitation(req, res, next) {
+  userService
+    .resendInvitation(req.params.id, req.get('origin'))
+    .then(() => {
+      res.json({
+        message:
+          'Invitation sent successfully, please check their email for verification instructions',
+        status: 'success',
+      });
     })
     .catch(next);
 }
