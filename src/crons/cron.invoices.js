@@ -209,6 +209,156 @@ function header(doc, record) {
   doc.text('Unit', 330, 185);
   doc.text('Unit Price', 360, 185);
   doc.text('Nett Price', 490, 185);
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 195)
+    .lineTo(600, 195)
+    .stroke();
+
+  doc.text('10', 30, 198);
+  doc.text('5048', 70, 198);
+  doc.text('Combined Credit Check - South Africa', 110, 198);
+  doc.text('554.00', 300, 198);
+  doc.text('ea', 330, 198);
+  doc.text('9.0000', 360, 198);
+  doc.text('50 835.04', 540, 198);
+
+  doc.text('20', 30, 208);
+  doc.text('9708', 70, 208);
+  doc.text('Combined Sequestration', 110, 208);
+  doc.text('136.00', 300, 208);
+  doc.text('ea', 330, 208);
+  doc.text('10.0000', 360, 208);
+  doc.text('8 160.00', 540, 208);
+
+  doc.text('30', 30, 218);
+  doc.text('5133', 70, 218);
+  doc.text('Compuscan Comprehensive - South Africa', 110, 218);
+  doc.text('25.00', 300, 218);
+  doc.text('ea', 330, 218);
+  doc.text('15.0000', 360, 218);
+  doc.text('748.25', 540, 218);
+
+  doc.text('40', 30, 228);
+  doc.text('5196', 70, 228);
+  doc.text('Compuscan Comprehensive - South Africa', 110, 228);
+  doc.text('25.00', 300, 228);
+  doc.text('ea', 330, 228);
+  doc.text('15.0000', 360, 228);
+  doc.text('748.25', 540, 228);
+
+  doc.text('50', 30, 238);
+  doc.text('5197', 70, 238);
+  doc.text('Compuscan Notices - South Africa', 110, 238);
+  doc.text('35.00', 300, 238);
+  doc.text('ea', 330, 238);
+  doc.text('30.0000', 360, 238);
+  doc.text('888.30', 540, 238);
+
+  doc.text('60', 30, 248);
+  doc.text('5048', 70, 248);
+  doc.text('Combined Credit Check - South Africa', 110, 248);
+  doc.text('554.00', 300, 248);
+  doc.text('ea', 330, 248);
+  doc.text('9.0000', 360, 248);
+  doc.text('50 835.04', 540, 248);
+
+  doc.text('70', 30, 258);
+  doc.text('9708', 70, 258);
+  doc.text('Combined Sequestration', 110, 258);
+  doc.text('136.00', 300, 258);
+  doc.text('ea', 330, 258);
+  doc.text('10.0000', 360, 258);
+  doc.text('8 160.00', 540, 258);
+
+  doc.text('80', 30, 268);
+  doc.text('5133', 70, 268);
+  doc.text('Compuscan Comprehensive - South Africa', 110, 268);
+  doc.text('25.00', 300, 268);
+  doc.text('ea', 330, 268);
+  doc.text('15.0000', 360, 268);
+  doc.text('748.25', 540, 268);
+
+  doc.text('90', 30, 278);
+  doc.text('5196', 70, 278);
+  doc.text('Compuscan Comprehensive - South Africa', 110, 278);
+  doc.text('25.00', 300, 278);
+  doc.text('ea', 330, 278);
+  doc.text('15.0000', 360, 278);
+  doc.text('748.25', 540, 278);
+
+  doc.text('100', 30, 288);
+  doc.text('5197', 70, 288);
+  doc.text('Compuscan Notices - South Africa', 110, 288);
+  doc.text('35.00', 300, 288);
+  doc.text('ea', 330, 288);
+  doc.text('30.0000', 360, 288);
+  doc.text('888.30', 540, 288);
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(10, 315)
+    .lineTo(600, 315)
+    .stroke();
+
+  // Vertical lines
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(55, 182)
+    .lineTo(55, 300)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(100, 182)
+    .lineTo(100, 300)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(280, 182)
+    .lineTo(280, 300)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(328, 182)
+    .lineTo(328, 300)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(352, 182)
+    .lineTo(352, 300)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(400, 182)
+    .lineTo(400, 300)
+    .stroke();
+
+  doc
+    .strokeColor('#aaaaaa')
+    .lineWidth(1)
+    .moveTo(599, 182)
+    .lineTo(599, 300)
+    .stroke();
+
+  doc.text('NETT', 470, 320);
+  doc.text('68 990.75', 540, 320);
+  doc.text('TOTAL VAT', 450, 330);
+  doc.text('10 290.75', 540, 330);
 }
 
 function setItems(item) {
