@@ -28,6 +28,7 @@ app.use('/api/cases', require('./cases/cases.controller'));
 app.use('/api/collections', require('./collections/collections.controller'));
 app.use('/api/contacts', require('./contacts/contacts.controller'));
 app.use('/api/customers', require('./customers/customers.controller'));
+app.use('/api/invoices', require('./invoices/invoices.controller'));
 app.use('/api/outcomes', require('./outcomes/outcomes.controller'));
 app.use('/api/queues', require('./queues/queues.controller'));
 
