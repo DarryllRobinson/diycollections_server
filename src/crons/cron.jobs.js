@@ -4,7 +4,7 @@ const db = require('../helpers/db');
 unlockCollections();
 
 function unlockCollections() {
-  cron.schedule('*/1 * * * *', () => {
+  cron.schedule('*/15 * * * *', () => {
     console.log(
       '******************************** running unlockCollections now'
     );
