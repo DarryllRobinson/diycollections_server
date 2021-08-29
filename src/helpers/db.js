@@ -65,6 +65,7 @@ async function initialize() {
   db.Case = require('../cases/case.model')(sequelize);
   db.Contact = require('../contacts/contact.model')(sequelize);
   db.Customer = require('../customers/customer.model')(sequelize);
+  db.Invoice = require('../invoices/invoice.model')(sequelize);
   db.Outcome = require('../outcomes/outcome.model')(sequelize);
   db.User = require('../users/user.model')(sequelize);
   db.RefreshToken = require('../users/refresh-token.model')(sequelize);

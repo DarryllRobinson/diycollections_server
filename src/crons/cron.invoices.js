@@ -1,9 +1,10 @@
 const cron = require('node-cron');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
+const moment = require('moment');
 
 const db = require('../helpers/db');
-const sendEmail = require('../helpers/send-email');
+const invoiceService = require('../invoices/invoice.service');
 const createFolder = require('../helpers/create-folder');
 
 const records = [
@@ -164,8 +165,10 @@ async function runInvoices() {
       }
     );
 
-    createInvoice(doc, record);
-    // create email with link to invoice
+    const fileName = createInvoice(doc, record);
+    // save invoice with link to invoice
+    invoiceService.saveNewInvoice(fileName);
+
     doc.end();
   });
   console.log(`Finished running ${records.length} invoices`);
@@ -594,34 +597,13 @@ function createInvoice(doc, record) {
   //console.log('createInvoice: ', record.customerRefNo);
   // First remove forward slashes from the customer name so as not to break the folder structure
   const name = record.customerName.replace(/\//g, ' ');
+  const invoiceDate = moment(new Date()).format('YYYYMMDD');
+  const fileName =
+    __dirname + `/invoices/${record.customerRefNo}/${name}-${invoiceDate}.pdf`;
   try {
-    doc.pipe(
-      fs.createWriteStream(
-        __dirname + `/invoices/${record.customerRefNo}/${name}.pdf`
-      )
-    );
+    doc.pipe(fs.createWriteStream(fileName));
   } catch (err) {
     console.error(err);
   }
-}
-
-async function sendInvoices(user, origin) {
-  const client = 'MIE';
-  let message;
-  if (origin) {
-    const verifyUrl = `${origin}/users/verify-email?token=${user.verificationToken}`;
-    message = `<p>Please click below to verify your email address:</p>
-              <p><a href="${verifyUrl}">${verifyUrl}</a></p>`;
-  } else {
-    message = `<p>Please use the token below to verify your email address with the <code>/user/verify-email</code> api route:</p>
-              <p><code>${user.verificationToken}</code></p>`;
-  }
-
-  await sendEmail({
-    to: user.email,
-    subject: 'The System Collections Platform - Verify Email',
-    html: `<h4>Invoice from ${client}</h4>
-               <p>Thanks for registering!</p>
-               ${message}`,
-  });
+  return fileName;
 }
