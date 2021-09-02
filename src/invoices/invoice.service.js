@@ -6,10 +6,20 @@ const crypto = require('crypto');
 const sendEmail = require('../helpers/send-email');
 
 module.exports = {
+  getAll,
   getById,
   saveNewInvoice,
   verifyInvoice,
 };
+
+async function getAll() {
+  try {
+    const invoices = await db.Invoice.findAll();
+    return invoices.map((invoice) => getAllDetails(invoice));
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 async function getById(id) {
   console.log('service get id: ', id);
@@ -25,11 +35,17 @@ async function getById(id) {
   });
 }
 
-async function saveNewInvoice(invoiceLocation) {
+function getAllDetails(invoice) {
+  const { customerRefNo, viewed } = invoice;
+  return { customerRefNo, viewed };
+}
+
+async function saveNewInvoice(invoiceLocation, customerRefNo) {
   // create new invoice object
   const invoice = new db.Invoice();
   invoice.invoiceToken = randomTokenString();
   invoice.invoiceLocation = invoiceLocation;
+  invoice.customerRefNo = customerRefNo;
 
   // save invoice
   await invoice.save();

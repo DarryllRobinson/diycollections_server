@@ -167,7 +167,7 @@ async function runInvoices() {
 
     const fileName = createInvoice(doc, record);
     // save invoice with link to invoice
-    invoiceService.saveNewInvoice(fileName);
+    invoiceService.saveNewInvoice(fileName, record.customerRefNo, totalBalance);
 
     doc.end();
   });

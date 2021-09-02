@@ -3,6 +3,7 @@ const db = require('../helpers/db');
 module.exports = {
   getAll,
   getById,
+  getCustomerInvoices,
   bulkCreate,
   create,
   update,
@@ -21,6 +22,39 @@ async function getAll() {
 async function getById(id) {
   const customer = await getCustomer(id);
   return basicDetails(customer);
+}
+
+async function getCustomerInvoices() {
+  //const customerInvoices = await db.Customer.findAll();
+  const customerInvoices = await db.Customer.findAll({
+    attributes: ['customerRefNo', 'customerName'],
+    include: [
+      {
+        model: db.Invoice,
+        attributes: ['hasViewed', 'viewed', 'totalBalance'],
+      },
+    ],
+  });
+  //console.log('customerInvoices done: ', JSON.stringify(customerInvoices));
+  return customerInvoices.map((x) => customerInvoicesDetails(x));
+}
+
+function customerInvoicesDetails(invoice) {
+  /*if (invoice.customerRefNo === 'AEO101')
+    console.log('invoice: ', JSON.stringify(invoice));
+  if (invoice.customerRefNo === 'AIM101')
+    console.log('invoice: ', JSON.stringify(invoice));*/
+  if (invoice.invoices.length > 0) {
+    const {
+      customerRefNo,
+      customerName,
+      invoices: [{ hasViewed, viewed, totalBalance }],
+    } = invoice;
+    return { customerRefNo, customerName, hasViewed, viewed, totalBalance };
+  } else {
+    const { customerRefNo, customerName } = invoice;
+    return { customerRefNo, customerName };
+  }
 }
 
 async function bulkCreate(params) {
@@ -79,6 +113,7 @@ async function _delete(id) {
 // helper functions
 
 async function getCustomer(id) {
+  console.log('here I am');
   const customer = await db.Customer.findByPk(id);
   if (!customer) throw 'Customer not found';
   return customer;

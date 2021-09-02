@@ -8,6 +8,7 @@ const customerService = require('./customer.service');
 
 // routes
 router.get('/', authorise(), getAll);
+router.get('/invoices', authorise(), getCustomerInvoices);
 router.get('/:id', authorise(), getById);
 router.post('/bulk', authorise(), bulkCreate);
 router.post('/', authorise(), createSchema, create);
@@ -20,6 +21,16 @@ function getAll(req, res, next) {
   customerService
     .getAll()
     .then((customers) => res.json(customers))
+    .catch(next);
+}
+
+function getCustomerInvoices(req, res, next) {
+  //console.log('******************************* getCustomerInvoices');
+  customerService
+    .getCustomerInvoices()
+    .then((customerInvoice) =>
+      customerInvoice ? res.json(customerInvoice) : res.sendStatus(404)
+    )
     .catch(next);
 }
 

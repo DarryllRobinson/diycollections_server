@@ -14,6 +14,7 @@ const path = require('path');
 router.get('/', authorise(), getAll);
 router.post('/verify-invoice', verifyInvoiceSchema, verifyInvoice);
 router.post('/document/', authorise(), getDocumentByLocation);
+router.post('/u-document/', getDocumentByLocation);
 router.post('/bulk', authorise(), bulkCreate);
 router.post('/', authorise(), createSchema, create);
 router.put('/:id', authorise(), updateSchema, update);
@@ -29,9 +30,9 @@ function getAll(req, res, next) {
 }
 
 function getDocumentByLocation(req, res, next) {
-  console.log('req.body', req.body);
+  //console.log('req.body', req.body);
   const { location } = req.body;
-  console.log('location: ', location);
+  //console.log('location: ', location);
   //const fileName = filepath + 'First_Customer.pdf';
   fs.readFile(location, (err, data) => {
     if (err) res.status(500).send(err);

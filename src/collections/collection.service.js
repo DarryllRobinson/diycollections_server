@@ -129,7 +129,7 @@ async function getAllStatus(recordStatus) {
 }
 
 function queueFields(collection) {
-  console.log('collection: ' + JSON.stringify(collection));
+  //console.log('collection: ' + JSON.stringify(collection));
   const {
     customerName,
     customerEntity,

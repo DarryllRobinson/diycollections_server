@@ -72,11 +72,21 @@ async function initialize() {
 
   // define relationships
   // add relationships for customers, accounts, contacts, cases and outcomes
+  // including invoices now too
+  db.Customer.hasMany(
+    db.Invoice,
+    { foreignKey: 'f_customerRefNo' },
+    { onDelete: 'CASCADE' }
+  );
+
+  db.Invoice.belongsTo(db.Customer, {
+    foreignKey: 'f_customerRefNo',
+    targetKey: 'customerRefNo',
+  });
+
   db.Customer.hasMany(
     db.Account,
-    {
-      foreignKey: 'f_customerRefNo',
-    },
+    { foreignKey: 'f_customerRefNo' },
     { onDelete: 'CASCADE' }
   );
 
@@ -84,6 +94,7 @@ async function initialize() {
     foreignKey: 'f_customerRefNo',
     targetKey: 'customerRefNo',
   });
+
   db.Account.hasMany(
     db.Case,
     {
@@ -91,6 +102,7 @@ async function initialize() {
     },
     { onDelete: 'CASCADE' }
   );
+
   db.Account.hasOne(
     db.Contact,
     {
