@@ -39,7 +39,7 @@ function authenticateSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-function authenticate(req, res, next) {
+function workingauthenticate(req, res, next) {
   const { email, password } = req.body;
   const ipAddress = req.ip;
   userService
@@ -51,21 +51,14 @@ function authenticate(req, res, next) {
     .catch(next);
 }
 
-function newauthenticate(req, res, next) {
+function authenticate(req, res, next) {
   const { email, password } = req.body;
   const ipAddress = req.ip;
   userService
     .authenticate({ email, password, ipAddress })
-    .then((response) => {
-      if (response.status === 'Error') {
-        console.log('failed');
-        res.json(response);
-      } else if (response.status === 'success') {
-        const { refreshToken, ...user } = response;
-        //.then(({ refreshToken, ...user }) => {
-        setTokenCookie(res, refreshToken);
-        res.json(user);
-      }
+    .then(({ refreshToken, ...user }) => {
+      setTokenCookie(res, refreshToken);
+      res.json(user);
     })
     .catch(next);
 }

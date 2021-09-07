@@ -1,5 +1,5 @@
 const dbConfig = require('./config.js');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const { Sequelize } = require('sequelize');
 
 // Determine which config to use for which environment
@@ -33,20 +33,11 @@ async function initialize() {
   //console.log('Creating db with config: ', config);
   const { host, port, user, password, database } = config;
   const pool = await mysql.createPool({
-    connectionLimit: 100,
     host,
     port,
     user,
     password,
   });
-
-  pool.query(
-    `CREATE DATABASE IF NOT EXISTS \`${database}\`;`,
-    (err, result) => {
-      if (err) throw err;
-      console.log('connection.query: ', result);
-    }
-  );
 
   pool.getConnection((err, connection) => {
     if (err) throw err;
@@ -72,7 +63,7 @@ async function initialize() {
   // init models and add them to the exported db object
   db.Account = require('../accounts/account.model')(sequelize);
   db.Case = require('../cases/case.model')(sequelize);
-  //db.Client = require('../clients/client.model')(sequelize);
+  db.Client = require('../clients/client.model')(sequelize);
   db.Contact = require('../contacts/contact.model')(sequelize);
   db.Customer = require('../customers/customer.model')(sequelize);
   db.Invoice = require('../invoices/invoice.model')(sequelize);
@@ -83,11 +74,11 @@ async function initialize() {
   // define relationships
   // add relationships for clients, customers, accounts, contacts, cases and outcomes
   // including invoices now too
-  /*db.Client.hasMany(
+  db.Client.hasMany(
     db.Customer,
     { foreignKey: 'f_clientId' },
     { onDelete: 'CASCADE' }
-  );*/
+  );
 
   db.Customer.hasMany(
     db.Invoice,

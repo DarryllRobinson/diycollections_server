@@ -1,4 +1,5 @@
-const db = require('../helpers/db');
+const db = require('../helpers/tenant.db');
+//const db = require('../helpers/db');
 
 module.exports = {
   getAll,
@@ -33,12 +34,14 @@ async function bulkCreate(params) {
 }
 
 async function create(params) {
+  console.log('******************** outcome params: ', params);
   // validate
   /*if (await db.Outcome.findOne({ where: { name: params.name } })) {
     throw 'Outcome "' + params.name + '" is already registered';
   }*/
 
   const outcome = new db.Outcome(params);
+  console.log('************************************ outcome: ', outcome);
 
   // save outcome
   await outcome.save();

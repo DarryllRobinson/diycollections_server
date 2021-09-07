@@ -1,0 +1,1 @@
+I used this answer for a long time, then one day composed it into a one liner for convenience.. this command will kill any process running on a given port (8000 in this example): lsof -n -i4TCP:8000 | grep LISTEN | tr -s ' ' | cut -f 2 -d ' ' | xargs kill -9

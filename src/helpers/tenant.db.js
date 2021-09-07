@@ -23,7 +23,7 @@ switch (process.env.REACT_APP_STAGE) {
     break;
 }
 
-module.exports = db = {};
+module.exports = tdb = {};
 
 initialize();
 
@@ -36,8 +36,8 @@ async function initialize() {
     connectionLimit: 100,
     host,
     port,
-    user,
-    password,
+    user: 'tentant1',
+    password: 'aaa',
   });
 
   pool.query(
@@ -63,7 +63,7 @@ async function initialize() {
   });
 
   // connect to db
-  console.log('connect to db: ', database);
+  console.log('connect to tenant db: ', database);
   const sequelize = new Sequelize(database, user, password, {
     dialect: 'mysql',
     dialectOptions: { decimalNumbers: true },
