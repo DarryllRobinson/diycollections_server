@@ -1,5 +1,19 @@
 const { DataTypes } = require('sequelize');
 
+/*
+
+
+CREATE VIEW outcomes AS
+SELECT id, outcomeStatus, transactionType, numberCalled, emailUsed, contactPerson, outcomeResolution, ptpDate, ptpAmount, debitResubmissionDate, debitResubmissionAmount, outcomeNotes, nextSteps, createdBy, f_caseNumber, createdAt, updatedAt
+FROM tbl_outcomes
+WHERE tenant = SUBSTRING_INDEX(USER(), '@', 1);
+
+CREATE TRIGGER tbl_outcomes_tenant_trigger
+BEFORE INSERT ON tbl_outcomes
+FOR EACH ROW
+SET new.tenant = SUBSTRING_INDEX(USER(), '@', 1);
+*/
+
 module.exports = model;
 
 function model(sequelize) {

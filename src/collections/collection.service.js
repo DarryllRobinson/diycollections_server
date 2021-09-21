@@ -1,107 +1,70 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
+const { QueryTypes } = require('sequelize');
 
 module.exports = {
   getAll,
   getCollection,
 };
 
-async function getAll() {
-  const collections = await db.Customer.findAll({
-    attributes: ['customerRefNo', 'customerName', 'regIdNumber'],
-    include: [
-      {
-        model: db.Account,
-        attributes: [
-          'amountDue',
-          'accountNumber',
-          'creditLimit',
-          'currentBalance',
-          'debtorAge',
-          'totalBalance',
-        ],
-        include: [
-          {
-            model: db.Case,
-            attributes: [
-              'caseNotes',
-              'caseNumber',
-              'currentAssignment',
-              'currentStatus',
-              'nextVisitDateTime',
-              'resolution',
-              'updatedAt',
-              'updatedBy',
-            ],
-          },
-        ],
-      },
-    ],
-  });
-  return collections.map((x) => collectionsFields(x));
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
 }
 
-async function getCollection(id) {
-  const collection = await db.Case.findAll({
-    attributes: [
-      'caseNotes',
-      'caseNumber',
-      'currentAssignment',
-      'currentStatus',
-      'kamNotes',
-      'nextVisitDateTime',
-      'resolution',
-      'updatedBy',
-    ],
-    where: { caseNumber: id },
-    include: [],
-    include: [
-      {
-        model: db.Account,
-        attributes: [
-          'amountDue',
-          'accountNotes',
-          'accountNumber',
-          'accountStatus',
-          'creditLimit',
-          'currentBalance',
-          'days30',
-          'days60',
-          'days90',
-          'days120',
-          'days150',
-          'days180',
-          'days180Over',
-          'debtorAge',
-          'debitOrderDate',
-          'lastPaymentAmount',
-          'lastPaymentDate',
-          'lastPTPAmount',
-          'lastPTPDate',
-          'paymentDueDate',
-          'totalBalance',
-        ],
-        include: [
-          {
-            model: db.Contact,
-            attributes: ['representativeName', 'representativeNumber'],
-          },
-
-          {
-            model: db.Customer,
-            attributes: [
-              'customerEntity',
-              'customerName',
-              'regIdNumber',
-              'regIdStatus',
-            ],
-          },
-        ],
-      },
-    ],
+async function connectNDB(user, password, dbs) {
+  //console.log('connectNDB: ', dbs);
+  const sequelize = await tenantdb.connect(user, password);
+  let dbModels = {};
+  dbs.forEach((db) => {
+    //console.log('******!!!!!!!! here: ', db);
+    let tempdb = require(`../${db}s/${db}.model`)(sequelize);
+    Object.assign(dbModels, tempdb);
+    //console.log('******!!!!!!!! here now: ', dbModels);
   });
+  //console.log('******!!!!!!!! here now: ', dbModels);
+  return dbModels;
+}
 
-  //console.log('collection: ' + JSON.stringify(collection));
+async function getAll(user, password) {
+  const sequelize = await tenantdb.connect(user, password);
+  const collections = await sequelize.query(
+    `SELECT customerRefNo, customerName, regIdNumber, amountDue,
+    accountNumber, creditLimit, currentBalance, debtorAge, totalBalance,
+    caseNotes, caseNumber, currentAssignment, currentStatus, nextVisitDateTime,
+    resolution, cases.updatedAt, cases.updatedBy
+    FROM thesystem_db.customers, thesystem_db.accounts, thesystem_db.cases
+    WHERE customerRefNo = f_customerRefNo
+    AND accountNumber = f_accountNumber`,
+    { type: QueryTypes.SELECT }
+  );
+  return collections;
+}
+
+async function getCollection(id, user, password) {
+  const sequelize = await tenantdb.connect(user, password);
+  const collection = await sequelize.query(
+    `SELECT caseNotes, caseNumber, currentAssignment, currentStatus, kamNotes,
+    nextVisitDateTime, resolution, cases.updatedBy,
+    amountDue, accountNotes, accountNumber, accountStatus, creditLimit, currentBalance,
+    days30, days60, days90, days120, days150, days180, days180Over,
+    debtorAge, debitOrderDate, lastPaymentAmount, lastPaymentAmount,
+    lastPTPAmount, lastPTPDate, paymentDueDate, totalBalance
+    representativeName, representativeNumber,
+    customerEntity, customerName, regIdNumber, regIdStatus
+    FROM cases, accounts, contacts, customers
+    WHERE cases.f_accountNumber = accounts.accountNumber
+    AND contacts.f_accountNumber = accounts.accountNumber
+    AND accounts.f_customerRefNo = customers.customerRefNo
+    AND cases.caseNumber = ${id}`,
+    { type: QueryTypes.SELECT }
+  );
+
+  /*console.log(
+    '****************************************************************collection: ' +
+      JSON.stringify(collection)
+  );*/
   return collectionFields(collection);
+  //return collection;
 }
 
 async function getAllStatus(recordStatus) {
@@ -216,7 +179,49 @@ function queueFields(collection) {
 
 function collectionsFields(collection) {
   //console.log('collection: ' + JSON.stringify(collection));
+  //console.log('collection: ', collection);
+
   const {
+    customerRefNo,
+    customerName,
+    regIdNumber,
+    amountDue,
+    accountNumber,
+    creditLimit,
+    currentBalance,
+    debtorAge,
+    totalBalance,
+    caseNotes,
+    caseNumber,
+    currentAssignment,
+    currentStatus,
+    nextVisitDateTime,
+    resolution,
+    updatedAt,
+    updatedBy,
+  } = collection;
+
+  return {
+    customerRefNo,
+    customerName,
+    regIdNumber,
+    amountDue,
+    accountNumber,
+    creditLimit,
+    currentBalance,
+    debtorAge,
+    totalBalance,
+    caseNotes,
+    caseNumber,
+    currentAssignment,
+    currentStatus,
+    nextVisitDateTime,
+    resolution,
+    updatedAt,
+    updatedBy,
+  };
+
+  /*const {
     customerRefNo,
     customerName,
     regIdNumber,
@@ -262,7 +267,7 @@ function collectionsFields(collection) {
     resolution,
     updatedAt,
     updatedBy,
-  };
+  };*/
 }
 
 function collectionFields(collection) {
@@ -277,31 +282,32 @@ function collectionFields(collection) {
       nextVisitDateTime,
       resolution,
       updatedBy,
-      account: {
-        amountDue,
-        accountNotes,
-        accountNumber,
-        accountStatus,
-        creditLimit,
-        currentBalance,
-        days30,
-        days60,
-        days90,
-        days120,
-        days150,
-        days180,
-        days180Over,
-        debtorAge,
-        debitOrderDate,
-        lastPaymentAmount,
-        lastPaymentDate,
-        lastPTPAmount,
-        lastPTPDate,
-        paymentDueDate,
-        totalBalance,
-        contact: { representativeName, representativeNumber },
-        customer: { customerEntity, customerName, regIdNumber },
-      },
+      amountDue,
+      accountNotes,
+      accountNumber,
+      accountStatus,
+      creditLimit,
+      currentBalance,
+      days30,
+      days60,
+      days90,
+      days120,
+      days150,
+      days180,
+      days180Over,
+      debtorAge,
+      debitOrderDate,
+      lastPaymentAmount,
+      lastPaymentDate,
+      lastPTPAmount,
+      lastPTPDate,
+      paymentDueDate,
+      totalBalance,
+      representativeName,
+      representativeNumber,
+      customerEntity,
+      customerName,
+      regIdNumber,
     },
   ] = collection;
 

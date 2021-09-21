@@ -1,4 +1,4 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
 
 module.exports = {
   getAll,
@@ -9,34 +9,43 @@ module.exports = {
   delete: _delete,
 };
 
-async function getAll() {
-  const contacts = await db.Contact.findAll();
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
+
+async function getAll(user, password) {
+  const db = await connectDB(user, password, 'contact');
+  const contacts = await db.findAll();
   return contacts.map((x) => basicDetails(x));
 }
 
-async function getById(id) {
-  const contact = await db.Contact.findAll({ where: { f_accountNumber: id } });
+async function getById(id, user, password) {
+  const db = await connectDB(user, password, 'contact');
+  const contact = await db.findAll({ where: { f_accountNumber: id } });
   //console.log('********************** contact: ' + JSON.stringify(contact));
   return contact;
 }
 
-async function bulkCreate(params) {
+async function bulkCreate(params, user, password) {
+  const db = await connectDB(user, password, 'contact');
   // Count existing rows to be able to count number of affected rows
-  const existingRows = await db.Contact.count({ distinct: 'id' });
+  const existingRows = await db.count({ distinct: 'id' });
 
-  await db.Contact.bulkCreate(params);
-  const totalRows = await db.Contact.count({ distinct: 'id' });
+  await db.bulkCreate(params);
+  const totalRows = await db.count({ distinct: 'id' });
 
   return totalRows - existingRows;
 }
 
-async function create(params) {
+async function create(params, user, password) {
+  const db = await connectDB(user, password, 'contact');
   // validate
   /*if (await db.Contact.findOne({ where: { name: params.name } })) {
     throw 'Contact "' + params.name + '" is already registered';
   }*/
 
-  const contact = new db.Contact(params);
+  const contact = new db(params);
 
   // save contact
   await contact.save();
@@ -44,8 +53,8 @@ async function create(params) {
   return basicDetails(contact);
 }
 
-async function update(id, params) {
-  const contact = await getContact(id);
+async function update(id, params, user, password) {
+  const contact = await getContact(id, user, password);
 
   // copy params to contact and save
   Object.assign(contact, params);
@@ -55,15 +64,16 @@ async function update(id, params) {
   return basicDetails(contact);
 }
 
-async function _delete(id) {
-  const contact = await getContact(id);
+async function _delete(id, user, password) {
+  const contact = await getContact(id, user, password);
   await contact.destroy();
 }
 
 // helper functions
 
-async function getContact(id) {
-  const contact = await db.Contact.findOne({ where: { f_accountNumber: id } });
+async function getContact(id, user, password) {
+  const db = await connectDB(user, password, 'contact');
+  const contact = await db.findOne({ where: { f_accountNumber: id } });
   if (!contact) throw 'Contact not found';
   //console.log('******************************** contact: ', contact);
   return contact;

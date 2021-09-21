@@ -18,6 +18,7 @@ router.delete('/:id', authorise(), _delete);
 module.exports = router;
 
 function getAll(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   customerService
     .getAll()
     .then((customers) => res.json(customers))
@@ -26,8 +27,9 @@ function getAll(req, res, next) {
 
 function getCustomerInvoices(req, res, next) {
   //console.log('******************************* getCustomerInvoices');
+  const { tenant, passwordHash } = req.user;
   customerService
-    .getCustomerInvoices()
+    .getCustomerInvoices(tenant, passwordHash)
     .then((customerInvoice) =>
       customerInvoice ? res.json(customerInvoice) : res.sendStatus(404)
     )
@@ -35,8 +37,9 @@ function getCustomerInvoices(req, res, next) {
 }
 
 function getById(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   customerService
-    .getById(req.params.id)
+    .getById(req.params.id, tenant, passwordHash)
     .then((customer) => (customer ? res.json(customer) : res.sendStatus(404)))
     .catch(next);
 }
@@ -68,15 +71,17 @@ function createSchema(req, res, next) {
 }
 
 function bulkCreate(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   customerService
-    .bulkCreate(req.body)
+    .bulkCreate(req.body, tenant, passwordHash)
     .then((customer) => res.json(customer))
     .catch(next);
 }
 
 function create(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   customerService
-    .create(req.body)
+    .create(req.body, tenant, passwordHash)
     .then((customer) => res.json(customer))
     .catch(next);
 }
@@ -108,15 +113,17 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   customerService
-    .update(req.params.id, req.body)
+    .update(req.params.id, req.body, tenant, passwordHash)
     .then((customer) => res.json(customer))
     .catch(next);
 }
 
 function _delete(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   customerService
-    .delete(req.params.id)
+    .delete(req.params.id, tenant, passwordHash)
     .then(() => res.json({ message: 'Customer deleted successfully' }))
     .catch(next);
 }

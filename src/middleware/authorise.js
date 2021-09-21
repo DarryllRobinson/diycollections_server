@@ -18,6 +18,7 @@ function authorise(roles = []) {
     // authorize based on user role
     async (req, res, next) => {
       const user = await db.User.findByPk(req.user.id);
+      //console.log('!!!!!!!! authorise user', JSON.stringify(user));
 
       if (
         !user ||
@@ -29,6 +30,14 @@ function authorise(roles = []) {
       }
 
       // authentication and authorisation successful
+      // retrieve tenant and password from tbl_clients
+      const { tenant, passwordHash } = await db.Client.findOne({
+        where: { id: user.f_clientId },
+      });
+      //console.log('######################## ', tenant, passwordHash);
+      req.user.tenant = tenant;
+      req.user.passwordHash = passwordHash;
+
       req.user.role = user.role;
       const refreshTokens = await user.getRefreshTokens();
       req.user.ownsToken = (token) =>

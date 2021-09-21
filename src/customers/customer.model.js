@@ -1,5 +1,17 @@
 const { DataTypes } = require('sequelize');
 
+/*
+CREATE VIEW customers AS
+SELECT operatorShortCode, customerRefNo, customerName, customerEntity, regIdNumber, customerType, productType, address1, address2, address3, address4, address5, createdBy, updatedBy, closedDate, closedBy, regIdStatus, f_clientId, createdAt, updatedAt
+FROM thesystem_db.tbl_customers
+WHERE tenant = SUBSTRING_INDEX(USER(), '@', 1);
+
+CREATE TRIGGER tbl_customers_tenant_trigger
+BEFORE INSERT ON thesystem_db.tbl_customers
+FOR EACH ROW
+SET new.tenant = SUBSTRING_INDEX(USER(), '@', 1);
+*/
+
 module.exports = model;
 
 function model(sequelize) {

@@ -16,15 +16,17 @@ router.delete('/:id', authorise(), _delete);
 module.exports = router;
 
 function getAll(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   accountService
-    .getAll()
+    .getAll(tenant, passwordHash)
     .then((accounts) => res.json(accounts))
     .catch(next);
 }
 
 function getById(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   accountService
-    .getById(req.params.id)
+    .getById(req.params.id, tenant, passwordHash)
     .then((account) => (account ? res.json(account) : res.sendStatus(404)))
     .catch(next);
 }
@@ -64,15 +66,17 @@ function createSchema(req, res, next) {
 }
 
 function bulkCreate(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   accountService
-    .bulkCreate(req.body)
+    .bulkCreate(req.body, tenant, passwordHash)
     .then((account) => res.json(account))
     .catch(next);
 }
 
 function create(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   accountService
-    .create(req.body)
+    .create(req.body, tenant, passwordHash)
     .then((account) => res.json(account))
     .catch(next);
 }
@@ -112,15 +116,18 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+  //console.log('**************** update controller: ', req.body, req.user);
+  const { tenant, passwordHash } = req.user;
   accountService
-    .update(req.params.id, req.body)
+    .update(req.params.id, req.body, tenant, passwordHash)
     .then((account) => res.json(account))
     .catch(next);
 }
 
 function _delete(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   accountService
-    .delete(req.params.id)
+    .delete(req.params.id, tenant, passwordHash)
     .then(() => res.json({ message: 'Account deleted successfully' }))
     .catch(next);
 }

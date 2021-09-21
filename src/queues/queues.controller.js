@@ -9,8 +9,9 @@ router.get('/', authorise(), getAll);
 module.exports = router;
 
 function getAll(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   queueService
-    .getAll()
+    .getAll(tenant, passwordHash)
     .then((queues) => res.json(queues))
     .catch(next);
 }

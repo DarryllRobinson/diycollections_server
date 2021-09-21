@@ -1,4 +1,4 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
 const { Op } = require('sequelize');
 const sequelize = require('sequelize');
 
@@ -8,21 +8,14 @@ module.exports = {
   getDatePTP,
 };
 
-/*
-Post.findAll({
-  where: {
-    [Op.or]: [{authorId: 12}, {authorId: 13}]
-  }
-});
-// SELECT * FROM post WHERE authorId = 12 OR authorId = 13;
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
 
-Model.findAll({
-  attributes: [[sequelize.fn('COUNT', sequelize.col('hats')), 'no_hats']]
-});
-*/
-
-async function getAging() {
-  const reports = await db.Account.findAll({
+async function getAging(user, password) {
+  const db = await connectDB(user, password, 'account');
+  const reports = await db.findAll({
     attributes: [
       [sequelize.fn('SUM', sequelize.col('currentBalance')), 'Current'],
       [sequelize.fn('SUM', sequelize.col('days30')), '30'],
@@ -34,26 +27,24 @@ async function getAging() {
       [sequelize.fn('SUM', sequelize.col('days180Over')), '>180'],
     ],
   });
-  //console.log('reports', reports);
-  //return basicDetails(reports);
+
   return reports;
 }
-
-async function getAgentPTP() {
-  const reports = await db.Outcome.findAll({
+async function getAgentPTP(user, password) {
+  const db = await connectDB(user, password, 'outcome');
+  const reports = await db.findAll({
     attributes: [
       ['createdBy', 'Agent'],
       [sequelize.fn('SUM', sequelize.col('ptpAmount')), 'Sum'],
     ],
     group: 'createdBy',
   });
-  //console.log('reports', reports);
-  //return basicDetails(reports);
   return reports;
 }
 
-async function getDatePTP() {
-  const reports = await db.Outcome.findAll({
+async function getDatePTP(user, password) {
+  const db = await connectDB(user, password, 'outcome');
+  const reports = await db.findAll({
     attributes: [
       [sequelize.literal('SUBSTRING(ptpDate, 1, 10)'), 'ptpDate'],
       [sequelize.fn('SUM', sequelize.col('ptpAmount')), 'Sum'],
@@ -61,8 +52,6 @@ async function getDatePTP() {
     where: { ptpDate: { [Op.ne]: null } },
     group: 'ptpDate',
   });
-  //console.log('reports', reports);
-  //return basicDetails(reports);
   return reports;
 }
 
@@ -91,7 +80,7 @@ function basicDetails(report) {
 // helper functions
 
 async function getAccount(id) {
-  const account = await db.Account.findByPk(id);
+  const account = await tenantdb.Account.findByPk(id);
   if (!account) throw 'Account not found';
   return account;
 }

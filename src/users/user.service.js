@@ -341,7 +341,7 @@ function randomTokenString() {
 }
 
 function basicDetails(user) {
-  //console.log('user: ', user);
+  //console.log('&*&*&*&& basicDetails user: ', JSON.stringify(user));
   const {
     id,
     firstName,
@@ -353,6 +353,7 @@ function basicDetails(user) {
     created,
     updated,
     isVerified,
+    f_clientId,
   } = user;
   return {
     id,
@@ -365,6 +366,7 @@ function basicDetails(user) {
     created,
     updated,
     isVerified,
+    f_clientId,
   };
 }
 

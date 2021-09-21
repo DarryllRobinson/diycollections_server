@@ -1,5 +1,18 @@
 const { DataTypes } = require('sequelize');
 
+/*
+
+CREATE VIEW cases AS
+SELECT caseNumber, currentAssignment, initialAssignment, caseNotes, kamNotes, currentStatus, pendReason, resolution, caseReason, createdBy, lockedDatetime, reopenedDate, reopenedBy, nextVisitDateTime, reassignedDate, reassignedBy, updatedBy, f_accountNumber, createdAt, updatedAt
+FROM tbl_cases
+WHERE tenant = SUBSTRING_INDEX(USER(), '@', 1);
+
+CREATE TRIGGER tbl_cases_tenant_trigger
+BEFORE INSERT ON tbl_cases
+FOR EACH ROW
+SET new.tenant = SUBSTRING_INDEX(USER(), '@', 1);
+*/
+
 module.exports = model;
 
 function model(sequelize) {
@@ -8,7 +21,6 @@ function model(sequelize) {
     currentAssignment: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: 'Unassigned',
     },
     initialAssignment: { type: DataTypes.STRING, allowNull: true },
     caseNotes: { type: DataTypes.STRING, allowNull: true },

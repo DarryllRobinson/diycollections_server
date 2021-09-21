@@ -40,24 +40,15 @@ async function initialize() {
     password,
   });
 
-  pool.query(
-    `CREATE DATABASE IF NOT EXISTS \`${database}\`;`,
-    (err, result) => {
-      if (err) throw err;
-      console.log('connection.query: ', result);
-    }
-  );
-
   pool.getConnection((err, connection) => {
     if (err) throw err;
-    console.log('!!!!!!!!!!!!!!!!! Connected as id ', connection.threadId);
+    //console.log('!!!!!!!!!!!!!!!!! db connected as id ', connection.threadId);
 
     connection.query(
       `CREATE DATABASE IF NOT EXISTS \`${database}\`;`,
       (err, result) => {
         connection.release();
         if (err) throw err;
-        console.log('connection.query: ', result);
       }
     );
   });
@@ -70,85 +61,25 @@ async function initialize() {
   });
 
   // init models and add them to the exported db object
-  db.Account = require('../accounts/account.model')(sequelize);
-  db.Case = require('../cases/case.model')(sequelize);
-  //db.Client = require('../clients/client.model')(sequelize);
-  db.Contact = require('../contacts/contact.model')(sequelize);
-  db.Customer = require('../customers/customer.model')(sequelize);
-  db.Invoice = require('../invoices/invoice.model')(sequelize);
-  db.Outcome = require('../outcomes/outcome.model')(sequelize);
+  db.Client = require('../clients/client.model')(sequelize);
+
   db.User = require('../users/user.model')(sequelize);
   db.RefreshToken = require('../users/refresh-token.model')(sequelize);
 
   // define relationships
   // add relationships for clients, customers, accounts, contacts, cases and outcomes
   // including invoices now too
-  /*db.Client.hasMany(
-    db.Customer,
+  db.Client.hasMany(
+    db.User,
     { foreignKey: 'f_clientId' },
     { onDelete: 'CASCADE' }
-  );*/
-
-  db.Customer.hasMany(
-    db.Invoice,
-    { foreignKey: 'f_customerRefNo' },
-    { onDelete: 'CASCADE' }
   );
 
-  db.Invoice.belongsTo(db.Customer, {
-    foreignKey: 'f_customerRefNo',
-    targetKey: 'customerRefNo',
-  });
-
-  db.Customer.hasMany(
-    db.Account,
-    { foreignKey: 'f_customerRefNo' },
-    { onDelete: 'CASCADE' }
+  db.User.belongsTo(
+    db.Client,
+    { foreignKey: 'f_clientId' },
+    { targetKey: 'id' }
   );
-
-  db.Account.belongsTo(db.Customer, {
-    foreignKey: 'f_customerRefNo',
-    targetKey: 'customerRefNo',
-  });
-
-  db.Account.hasMany(
-    db.Case,
-    {
-      foreignKey: 'f_accountNumber',
-    },
-    { onDelete: 'CASCADE' }
-  );
-
-  db.Account.hasOne(
-    db.Contact,
-    {
-      foreignKey: 'f_accountNumber',
-    },
-    { onDelete: 'CASCADE' }
-  );
-
-  db.Contact.belongsTo(db.Account, {
-    foreignKey: 'f_accountNumber',
-    targetKey: 'accountNumber',
-  });
-
-  db.Case.belongsTo(db.Account, {
-    foreignKey: 'f_accountNumber',
-    targetKey: 'accountNumber',
-  });
-  db.Case.hasMany(
-    db.Outcome,
-    {
-      foreignKey: 'f_caseNumber',
-    },
-    { onDelete: 'CASCADE' }
-  );
-
-  db.Outcome.belongsTo(db.Case, {
-    foreignKey: 'f_caseNumber',
-    targetKey: 'caseNumber',
-  });
-
   db.User.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
   db.RefreshToken.belongsTo(db.User);
 

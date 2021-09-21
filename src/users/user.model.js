@@ -28,6 +28,7 @@ function model(sequelize) {
         return !!(this.verified || this.passwordReset);
       },
     },
+    f_clientId: { type: DataTypes.INTEGER },
   };
 
   const options = {

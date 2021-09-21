@@ -1,4 +1,4 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
 
 module.exports = {
   getAll,
@@ -10,22 +10,29 @@ module.exports = {
   delete: _delete,
 };
 
-async function getAll() {
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
+
+async function getAll(user, password) {
   try {
-    const customers = await db.Customer.findAll();
+    const db = await connectDB(user, password, 'customer');
+    const customers = await db.findAll();
     return customers.map((x) => basicDetails(x));
   } catch (err) {
     console.log('customerService.getAll error: ', err);
   }
 }
 
-async function getById(id) {
-  const customer = await getCustomer(id);
+async function getById(id, user, password) {
+  const customer = await getCustomer(id, user, password);
   return basicDetails(customer);
 }
 
-async function getCustomerInvoices() {
+async function getCustomerInvoices(user, password) {
   //const customerInvoices = await db.Customer.findAll();
+  const db = await connectDB(user, password, 'customer');
   const customerInvoices = await db.Customer.findAll({
     attributes: ['customerRefNo', 'customerName'],
     include: [
@@ -57,25 +64,25 @@ function customerInvoicesDetails(invoice) {
   }
 }
 
-async function bulkCreate(params) {
+async function bulkCreate(params, user, password) {
   // Count existing rows to be able to count number of affected rows
-  const existingRows = await db.Customer.count({ distinct: 'customerName' });
+  const db = await connectDB(user, password, 'customer');
+  const existingRows = await db.count({ distinct: 'customerName' });
 
   await db.Customer.bulkCreate(params);
-  const totalRows = await db.Customer.count({ distinct: 'customerName' });
+  const totalRows = await db.count({ distinct: 'customerName' });
 
   return totalRows - existingRows;
 }
 
-async function create(params) {
+async function create(params, user, password) {
+  const db = await connectDB(user, password, 'customer');
   // validate
-  if (
-    await db.Customer.findOne({ where: { customerName: params.customerName } })
-  ) {
+  if (await db.findOne({ where: { customerName: params.customerName } })) {
     throw 'Customer "' + params.customerName + '" is already registered';
   }
 
-  const customer = new db.Customer(params);
+  const customer = new db(params);
 
   // save customer
   await customer.save();
@@ -83,14 +90,15 @@ async function create(params) {
   return basicDetails(customer);
 }
 
-async function update(id, params) {
-  const customer = await getCustomer(id);
+async function update(id, params, user, password) {
+  const db = await connectDB(user, password, 'customer');
+  const customer = await getCustomer(id, user, password);
 
   // validate (if email was changed)
   if (
     params.customerName &&
     customer.customerName !== params.customerName &&
-    (await db.Customer.findOne({
+    (await db.findOne({
       where: { customerName: params.customerName },
     }))
   ) {
@@ -105,16 +113,17 @@ async function update(id, params) {
   return basicDetails(customer);
 }
 
-async function _delete(id) {
-  const customer = await getCustomer(id);
+async function _delete(id, user, password) {
+  const customer = await getCustomer(id, user, password);
   await customer.destroy();
 }
 
 // helper functions
 
-async function getCustomer(id) {
+async function getCustomer(id, user, password) {
   console.log('here I am');
-  const customer = await db.Customer.findByPk(id);
+  const db = await connectDB(user, password, 'customer');
+  const customer = await db.findByPk(id);
   if (!customer) throw 'Customer not found';
   return customer;
 }

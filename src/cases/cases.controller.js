@@ -16,15 +16,17 @@ router.delete('/:id', authorise(), _delete);
 module.exports = router;
 
 function getAll(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   caseService
-    .getAll()
+    .getAll(tenant, passwordHash)
     .then((cases) => res.json(cases))
     .catch(next);
 }
 
 function getById(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   caseService
-    .getById(req.params.id)
+    .getById(req.params.id, tenant, passwordHash)
     .then((caseObject) =>
       caseObject ? res.json(caseObject) : res.sendStatus(404)
     )
@@ -56,15 +58,17 @@ function createSchema(req, res, next) {
 }
 
 function bulkCreate(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   caseService
-    .bulkCreate(req.body)
+    .bulkCreate(req.body, tenant, passwordHash)
     .then((caseObject) => res.json(caseObject))
     .catch(next);
 }
 
 function create(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   caseService
-    .create(req.body)
+    .create(req.body, tenant, passwordHash)
     .then((caseObject) => res.json(caseObject))
     .catch(next);
 }
@@ -72,7 +76,7 @@ function create(req, res, next) {
 function updateSchema(req, res, next) {
   const schema = Joi.object({
     caseNumber: Joi.string(),
-    currentAssignment: Joi.string(),
+    currentAssignment: Joi.string().allow(null),
     initialAssignment: Joi.string(),
     caseNotes: Joi.string(),
     kamNotes: Joi.string(),
@@ -81,6 +85,7 @@ function updateSchema(req, res, next) {
     resolution: Joi.string(),
     caseReason: Joi.string(),
     lockedDatetime: Joi.date(),
+    nextVisitDateTime: Joi.date().allow(null),
     createdBy: Joi.string(),
     reassignedDate: Joi.date(),
     reassignedBy: Joi.string(),
@@ -94,15 +99,17 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   caseService
-    .update(req.params.id, req.body)
+    .update(req.params.id, req.body, tenant, passwordHash)
     .then((caseObject) => res.json(caseObject))
     .catch(next);
 }
 
 function _delete(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   caseService
-    .delete(req.params.id)
+    .delete(req.params.id, tenant, passwordHash)
     .then(() => res.json({ message: 'Case deleted successfully' }))
     .catch(next);
 }

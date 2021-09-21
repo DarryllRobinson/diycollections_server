@@ -4,27 +4,12 @@ module.exports = model;
 
 function model(sequelize) {
   const attributes = {
-    operatorShortCode: { type: DataTypes.STRING, allowNull: true },
-    customerRefNo: { type: DataTypes.STRING, primaryKey: true },
-    customerName: { type: DataTypes.STRING, allowNull: false },
-    customerEntity: { type: DataTypes.STRING, allowNull: false },
-    regIdNumber: { type: DataTypes.STRING, allowNull: true },
-    customerType: { type: DataTypes.STRING, allowNull: true },
-    productType: { type: DataTypes.STRING, allowNull: true },
-    address1: { type: DataTypes.STRING, allowNull: true },
-    address2: { type: DataTypes.STRING, allowNull: true },
-    address3: { type: DataTypes.STRING, allowNull: true },
-    address4: { type: DataTypes.STRING, allowNull: true },
-    address5: { type: DataTypes.STRING, allowNull: true },
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    clientName: { type: DataTypes.STRING, allowNull: false },
+    tenant: { type: DataTypes.STRING, allowNull: false },
+    passwordHash: { type: DataTypes.STRING, allowNull: false },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
-    closedDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: DataTypes.NOW,
-    },
-    closedBy: { type: DataTypes.STRING, allowNull: true },
-    regIdStatus: { type: DataTypes.STRING, allowNull: true },
     f_clientId: { type: DataTypes.INTEGER, allowNull: false },
   };
 
@@ -42,5 +27,7 @@ function model(sequelize) {
   };*/
 
   //return sequelize.define('account', attributes, options);
-  return sequelize.define('client', attributes);
+  return sequelize.define('client', attributes, {
+    tableName: 'tbl_clients',
+  });
 }

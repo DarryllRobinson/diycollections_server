@@ -1,4 +1,4 @@
-const db = require('../helpers/tenant.db');
+const tenantdb = require('../helpers/tenant.db');
 //const db = require('../helpers/db');
 
 module.exports = {
@@ -10,38 +10,46 @@ module.exports = {
   delete: _delete,
 };
 
-async function getAll() {
-  const outcomes = await db.Outcome.findAll();
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
+
+async function getAll(user, password) {
+  const db = await connectDB(user, password, 'outcome');
+  const outcomes = await db.findAll();
   return outcomes.map((x) => basicDetails(x));
 }
 
-async function getById(id) {
-  const outcomes = await db.Outcome.findAll({
+async function getById(id, user, password) {
+  const db = await connectDB(user, password, 'outcome');
+  const outcomes = await db.findAll({
     where: { f_caseNumber: id },
   });
-  //console.log('outcomes: ', JSON.stringify(outcomes));
   return outcomes;
 }
 
 async function bulkCreate(params) {
+  const db = await connectDB(user, password, 'outcome');
   // Count existing rows to be able to count number of affected rows
-  const existingRows = await db.Outcome.count({ distinct: 'id' });
+  const existingRows = await db.count({ distinct: 'id' });
 
-  await db.Outcome.bulkCreate(params);
-  const totalRows = await db.Outcome.count({ distinct: 'id' });
+  await db.bulkCreate(params);
+  const totalRows = await db.count({ distinct: 'id' });
 
   return totalRows - existingRows;
 }
 
-async function create(params) {
-  console.log('******************** outcome params: ', params);
+async function create(params, user, password) {
+  //console.log('******************** outcome: ', params, user);
+  const db = await connectDB(user, password, 'outcome');
   // validate
   /*if (await db.Outcome.findOne({ where: { name: params.name } })) {
     throw 'Outcome "' + params.name + '" is already registered';
   }*/
 
-  const outcome = new db.Outcome(params);
-  console.log('************************************ outcome: ', outcome);
+  const outcome = new db(params);
+  //console.log('************************************ outcome: ', outcome);
 
   // save outcome
   await outcome.save();
@@ -49,8 +57,8 @@ async function create(params) {
   return basicDetails(outcome);
 }
 
-async function update(id, params) {
-  const outcome = await getOutcome(id);
+async function update(id, params, user, password) {
+  const outcome = await getOutcome(id, user, password);
 
   // validate (if email was changed)
   /*if (
@@ -69,15 +77,16 @@ async function update(id, params) {
   return basicDetails(outcome);
 }
 
-async function _delete(id) {
-  const outcome = await getOutcome(id);
+async function _delete(id, user, password) {
+  const outcome = await getOutcome(id, user, password);
   await outcome.destroy();
 }
 
 // helper functions
 
-async function getOutcome(id) {
-  const outcome = await db.Outcome.findByPk(id);
+async function getOutcome(id, user, password) {
+  const db = await connectDB(user, password, 'outcome');
+  const outcome = await db.findByPk(id);
   if (!outcome) throw 'Outcome not found';
   return outcome;
 }

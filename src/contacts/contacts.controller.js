@@ -17,15 +17,17 @@ router.delete('/:id', authorise(), _delete);
 module.exports = router;
 
 function getAll(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   contactService
-    .getAll()
+    .getAll(tenant, passwordHash)
     .then((contacts) => res.json(contacts))
     .catch(next);
 }
 
 function getById(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   contactService
-    .getById(req.params.id)
+    .getById(req.params.id, tenant, passwordHash)
     .then((contact) => (contact ? res.json(contact) : res.sendStatus(404)))
     .catch(next);
 }
@@ -76,15 +78,17 @@ function createSchema(req, res, next) {
 }
 
 function bulkCreate(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   contactService
-    .bulkCreate(req.body)
+    .bulkCreate(req.body, tenant, passwordHash)
     .then((contact) => res.json(contact))
     .catch(next);
 }
 
 function create(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   contactService
-    .create(req.body)
+    .create(req.body, tenant, passwordHash)
     .then((contact) => res.json(contact))
     .catch(next);
 }
@@ -133,15 +137,17 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   contactService
-    .update(req.params.id, req.body)
+    .update(req.params.id, req.body, tenant, passwordHash)
     .then((contact) => res.json(contact))
     .catch(next);
 }
 
 function _delete(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   contactService
-    .delete(req.params.id)
+    .delete(req.params.id, tenant, passwordHash)
     .then(() => res.json({ message: 'Contact deleted successfully' }))
     .catch(next);
 }

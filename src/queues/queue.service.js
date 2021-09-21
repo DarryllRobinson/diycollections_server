@@ -1,17 +1,24 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
 
 module.exports = {
   getAll,
   getByUser,
 };
 
-async function getAll() {
-  const queues = await db.Case.findAll();
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
+
+async function getAll(user, password) {
+  const db = await connectDB(user, password, 'case');
+  const queues = await db.findAll();
   return queues.map((x) => basicDetails(x));
 }
 
 async function getByUser() {
-  const queues = await db.Case.findAll();
+  const db = await connectDB(user, password, 'case');
+  const queues = await db.findAll();
   return queues.map((x) => basicDetails(x));
 }
 

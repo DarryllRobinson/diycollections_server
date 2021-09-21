@@ -16,8 +16,9 @@ router.delete('/:id', authorise(), _delete);
 module.exports = router;
 
 function getAll(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   outcomeService
-    .getAll()
+    .getAll(tenant, passwordHash)
     .then((outcomes) => {
       res.json(outcomes);
     })
@@ -26,8 +27,9 @@ function getAll(req, res, next) {
 
 function getById(req, res, next) {
   // returns all outcomes based on caseNumber
+  const { tenant, passwordHash } = req.user;
   outcomeService
-    .getById(req.params.id)
+    .getById(req.params.id, tenant, passwordHash)
     .then((outcome) => {
       outcome ? res.json(outcome) : res.sendStatus(404);
     })
@@ -55,15 +57,18 @@ function createSchema(req, res, next) {
 }
 
 function bulkCreate(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   outcomeService
-    .bulkCreate(req.body)
+    .bulkCreate(req.body, tenant, passwordHash)
     .then((outcome) => res.json(outcome))
     .catch(next);
 }
 
 function create(req, res, next) {
+  //console.log('**************** create controller: ', req.user);
+  const { tenant, passwordHash } = req.user;
   outcomeService
-    .create(req.body)
+    .create(req.body, tenant, passwordHash)
     .then((outcome) => res.json(outcome))
     .catch(next);
 }
@@ -89,15 +94,17 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   outcomeService
-    .update(req.params.id, req.body)
+    .update(req.params.id, req.body, tenant, passwordHash)
     .then((outcome) => res.json(outcome))
     .catch(next);
 }
 
 function _delete(req, res, next) {
+  const { tenant, passwordHash } = req.user;
   outcomeService
-    .delete(req.params.id)
+    .delete(req.params.id, tenant, passwordHash)
     .then(() => res.json({ message: 'Outcome deleted successfully' }))
     .catch(next);
 }

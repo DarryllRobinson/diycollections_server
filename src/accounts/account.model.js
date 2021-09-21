@@ -1,5 +1,19 @@
 const { DataTypes } = require('sequelize');
 
+/*
+
+
+CREATE VIEW thesystem_db.accounts AS
+    SELECT accountNumber, accountName, openDate, debtorAge, paymentTermDays, creditLimit, totalBalance, amountDue, currentBalance, days30, days60, days90, days120, days150, days180, days180Over, paymentMethod, paymentDueDate, debitOrderDate, lastPaymentDate, lastPaymentAmount, lastPTPDate, lastPTPAmount, accountNotes, accountStatus, arg, createdBy, updatedBy, f_customerRefNo, createdAt, updatedAt
+    FROM thesystem_db.tbl_accounts
+    WHERE tenant = SUBSTRING_INDEX(USER(), '@', 1);
+
+CREATE TRIGGER tbl_accounts_tenant_trigger
+BEFORE INSERT ON tbl_accounts
+FOR EACH ROW
+SET new.tenant = SUBSTRING_INDEX(USER(), '@', 1);
+*/
+
 module.exports = model;
 
 function model(sequelize) {

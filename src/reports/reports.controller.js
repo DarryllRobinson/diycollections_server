@@ -11,22 +11,29 @@ router.get('/datePTP', authorise(), getDatePTP);
 module.exports = router;
 
 function getAging(req, res, next) {
+  //console.log('getAging', req.user);
+  const { tenant, passwordHash } = req.user;
   reportService
-    .getAging()
+    .getAging(tenant, passwordHash)
+    //.getAgingFromView(tenant, passwordHash)
     .then((reports) => res.json(reports))
     .catch(next);
 }
 
 function getAgentPTP(req, res, next) {
+  //console.log('getAgentPTP controller', req.user);
+  const { tenant, passwordHash } = req.user;
   reportService
-    .getAgentPTP()
+    .getAgentPTP(tenant, passwordHash)
     .then((reports) => res.json(reports))
     .catch(next);
 }
 
 function getDatePTP(req, res, next) {
+  //console.log('getDatePTP', req.user);
+  const { tenant, passwordHash } = req.user;
   reportService
-    .getDatePTP()
+    .getDatePTP(tenant, passwordHash)
     .then((reports) => res.json(reports))
     .catch(next);
 }

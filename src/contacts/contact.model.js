@@ -1,5 +1,17 @@
 const { DataTypes } = require('sequelize');
 
+/*
+CREATE VIEW contacts AS
+SELECT id, primaryContactName, primaryContactNumber, primaryContactEmail, representativeName, representativeNumber, representativeEmail, alternativeRepName, alternativeRepNumber, alternativeRepEmail, otherNumber1, otherNumber2, otherNumber3, otherNumber4, otherNumber5, otherNumber6, otherNumber7, otherNumber8, otherNumber9, otherNumber10, otherEmail1, otherEmail2, otherEmail3, otherEmail4, otherEmail5, otherEmail6, otherEmail7, otherEmail8, otherEmail9, otherEmail10, dnc1, dnc2, dnc3, dnc4, dnc5, updatedBy, f_accountNumber, createdAt, updatedAt
+FROM tbl_contacts
+WHERE tenant = SUBSTRING_INDEX(USER(), '@', 1);
+
+CREATE TRIGGER tbl_contacts_tenant_trigger
+BEFORE INSERT ON tbl_contacts
+FOR EACH ROW
+SET new.tenant = SUBSTRING_INDEX(USER(), '@', 1);
+*/
+
 module.exports = model;
 
 function model(sequelize) {

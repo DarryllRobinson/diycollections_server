@@ -1,4 +1,4 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
 
 module.exports = {
   getAll,
@@ -9,33 +9,36 @@ module.exports = {
   delete: _delete,
 };
 
-async function getAll() {
-  const cases = await db.Case.findAll();
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
+
+async function getAll(user, password) {
+  const db = await connectDB(user, password, 'case');
+  const cases = await db.findAll();
   return cases.map((x) => basicDetails(x));
 }
 
-async function getById(id) {
-  const caseObject = await getCase(id);
+async function getById(id, user, password) {
+  const caseObject = await getCase(id, user, password);
   return basicDetails(caseObject);
 }
 
-async function bulkCreate(params) {
+async function bulkCreate(params, user, password) {
   // Count existing rows to be able to count number of affected rows
-  const existingRows = await db.Case.count({ distinct: 'id' });
+  const db = await connectDB(user, password, 'case');
+  const existingRows = await db.count({ distinct: 'id' });
 
-  await db.Case.bulkCreate(params);
-  const totalRows = await db.Case.count({ distinct: 'id' });
+  await db.bulkCreate(params, user, password);
+  const totalRows = await db.count({ distinct: 'id' });
 
   return totalRows - existingRows;
 }
 
-async function create(params) {
-  // validate
-  if (await db.Case.findOne({ where: { name: params.name } })) {
-    throw 'Case "' + params.name + '" is already registered';
-  }
-
-  const caseObject = new db.Case(params);
+async function create(params, user, password) {
+  const db = await connectDB(user, password, 'case');
+  const caseObject = new db(params, user, password);
 
   // save case
   await caseObject.save();
@@ -43,19 +46,11 @@ async function create(params) {
   return basicDetails(caseObject);
 }
 
-async function update(id, params) {
-  const caseObject = await getCase(id);
-
-  // validate (if email was changed)
-  if (
-    params.name &&
-    caseObject.name !== params.name &&
-    (await db.Case.findOne({ where: { name: params.name } }))
-  ) {
-    throw 'Case "' + params.name + '" is already taken';
-  }
+async function update(id, params, user, password) {
+  const caseObject = await getCase(id, user, password);
 
   // copy params to case and save
+  console.log('******************************** update params: ', params);
   Object.assign(caseObject, params);
   caseObject.updated = Date.now();
   await caseObject.save();
@@ -63,15 +58,16 @@ async function update(id, params) {
   return basicDetails(caseObject);
 }
 
-async function _delete(id) {
-  const caseObject = await getCase(id);
+async function _delete(id, user, password) {
+  const caseObject = await getCase(id, user, password);
   await caseObject.destroy();
 }
 
 // helper functions
 
-async function getCase(id) {
-  const caseObject = await db.Case.findByPk(id);
+async function getCase(id, user, password) {
+  const db = await connectDB(user, password, 'case');
+  const caseObject = await db.findByPk(id);
   if (!caseObject) throw 'Case not found';
   return caseObject;
 }
