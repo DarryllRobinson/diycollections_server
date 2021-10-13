@@ -29,7 +29,7 @@ async function getById(id, user, password) {
   return outcomes;
 }
 
-async function bulkCreate(params) {
+async function bulkCreate(params, user, password) {
   const db = await connectDB(user, password, 'outcome');
   // Count existing rows to be able to count number of affected rows
   const existingRows = await db.count({ distinct: 'id' });

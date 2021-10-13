@@ -46,6 +46,7 @@ function model(sequelize) {
     },
     reassignedBy: { type: DataTypes.STRING, allowNull: true },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
+    tenant: { type: DataTypes.STRING, allowNull: false },
     f_accountNumber: {
       type: DataTypes.STRING,
       references: { model: db.Account, key: 'accountNumber' },
@@ -66,5 +67,5 @@ function model(sequelize) {
   };*/
 
   //return sequelize.define('account', attributes, options);
-  return sequelize.define('case', attributes);
+  return sequelize.define('case', attributes, { tableName: 'tbl_cases' });
 }

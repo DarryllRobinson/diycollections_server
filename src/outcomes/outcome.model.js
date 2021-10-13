@@ -43,6 +43,7 @@ function model(sequelize) {
     outcomeNotes: { type: DataTypes.STRING, allowNull: true },
     nextSteps: { type: DataTypes.STRING, allowNull: true },
     createdBy: { type: DataTypes.STRING, allowNull: false },
+    tenant: { type: DataTypes.STRING, allowNull: false },
     f_caseNumber: {
       type: DataTypes.STRING,
       references: { model: db.Case, key: 'caseNumber' },
@@ -63,5 +64,5 @@ function model(sequelize) {
   };*/
 
   //return sequelize.define('account', attributes, options);
-  return sequelize.define('outcome', attributes);
+  return sequelize.define('outcome', attributes, { tableName: 'tbl_outcomes' });
 }

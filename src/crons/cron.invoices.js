@@ -123,6 +123,9 @@ const items = [
   },
 ];
 
+// will evetually come from the database
+const totalBalance = 44334;
+
 setTimeout(() => {
   //runInvoices();
 }, 5000);

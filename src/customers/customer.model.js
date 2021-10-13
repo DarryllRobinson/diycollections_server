@@ -37,6 +37,7 @@ function model(sequelize) {
     },
     closedBy: { type: DataTypes.STRING, allowNull: true },
     regIdStatus: { type: DataTypes.STRING, allowNull: true },
+    tenant: { type: DataTypes.STRING, allowNull: false },
     f_clientId: { type: DataTypes.INTEGER, allowNull: false },
   };
 
@@ -54,5 +55,7 @@ function model(sequelize) {
   };*/
 
   //return sequelize.define('account', attributes, options);
-  return sequelize.define('customer', attributes);
+  return sequelize.define('customer', attributes, {
+    tableName: 'tbl_customers',
+  });
 }

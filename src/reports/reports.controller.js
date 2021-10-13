@@ -21,7 +21,7 @@ function getAging(req, res, next) {
 }
 
 function getAgentPTP(req, res, next) {
-  //console.log('getAgentPTP controller', req.user);
+  console.log('getAgentPTP controller', req.user);
   const { tenant, passwordHash } = req.user;
   reportService
     .getAgentPTP(tenant, passwordHash)

@@ -33,6 +33,7 @@ async function getById(id, user, password) {
 }
 
 async function bulkCreate(params, user, password) {
+  //console.log('**************** bulkCreate', params, user, password);
   const db = await connectDB(user, password, 'account');
   // Count existing rows to be able to count number of affected rows
   const existingRows = await db.count({ distinct: 'accountNumber' });
@@ -44,7 +45,7 @@ async function bulkCreate(params, user, password) {
 }
 
 async function create(params, user, password) {
-  console.log('**************** create', params, user, password);
+  //console.log('**************** create', params, user, password);
   const db = await connectDB(user, password, 'account');
   // validate
   if (await db.findOne({ where: { name: params.name } })) {

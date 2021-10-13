@@ -11,15 +11,15 @@ const prodConfig = {
   host: 'localhost',
   user: 'thesyste_prodsqluser',
   port: '3306',
-  password: '7W3#R$zu^$nbxF',
-  database: 'thesyste_cws_admin',
+  password: '',
+  database: '',
 };
 
 const sitConfig = {
   host: 'localhost',
   user: 'thesyste_sitsqluser',
   port: '3306',
-  password: 'FfhZzp3Sz6*W$Z',
+  password: 'G2x8Dqg58r3eM@wE7W%@GNSwZHaNCZQ!%W9Q#TtU',
   database: 'thesyste_sit',
 };
 
@@ -27,7 +27,7 @@ const uatConfig = {
   host: 'localhost',
   user: 'thesyste_uatsqluser',
   port: '3306',
-  password: 'fzVJSa1k64b@Rr',
+  password: '',
   database: 'thesyste_uat',
 };
 
@@ -35,7 +35,7 @@ const reportConfig = {
   host: 'localhost',
   user: 'thesyste_reportuser',
   port: '3306',
-  password: '92#A&4tBCXMfJ3',
+  password: '6e5!PNN!7v$3w&&ERs2aeQfp2y&exLzbxry6@yEQ$4dCH9s3HFBxDxXua9Ew',
   database: 'thesyste_reports',
 };
 
@@ -47,7 +47,7 @@ const emailConfig = {
     secure: true,
     auth: {
       user: 'robot@thesystem.co.za',
-      pass: '%IT[Gn+d_.we',
+      pass: '^?;iMVP+8Nxd',
     },
   },
 };

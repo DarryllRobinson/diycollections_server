@@ -20,7 +20,7 @@ module.exports = router;
 function getAll(req, res, next) {
   const { tenant, passwordHash } = req.user;
   customerService
-    .getAll()
+    .getAll(tenant, passwordHash)
     .then((customers) => res.json(customers))
     .catch(next);
 }

@@ -51,6 +51,7 @@ function model(sequelize) {
     dnc4: { type: DataTypes.STRING, allowNull: true },
     dnc5: { type: DataTypes.STRING, allowNull: true },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
+    tenant: { type: DataTypes.STRING, allowNull: false },
     f_accountNumber: {
       type: DataTypes.STRING,
       references: { model: db.Account, key: 'accountNumber' },
@@ -72,6 +73,5 @@ function model(sequelize) {
     },
   };*/
 
-  return sequelize.define('contact', attributes, options);
-  //return sequelize.define('contact', attributes);
+  return sequelize.define('contact', attributes, { tableName: 'tbl_contacts' });
 }

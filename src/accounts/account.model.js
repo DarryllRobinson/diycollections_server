@@ -44,6 +44,7 @@ function model(sequelize) {
     accountNotes: { type: DataTypes.STRING, allowNull: true },
     accountStatus: { type: DataTypes.STRING, allowNull: true },
     arg: { type: DataTypes.STRING, allowNull: true },
+    tenant: { type: DataTypes.STRING, allowNull: false },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
     f_customerRefNo: {
@@ -66,5 +67,5 @@ function model(sequelize) {
   };*/
 
   //return sequelize.define('account', attributes, options);
-  return sequelize.define('account', attributes);
+  return sequelize.define('account', attributes, { tableName: 'tbl_accounts' });
 }

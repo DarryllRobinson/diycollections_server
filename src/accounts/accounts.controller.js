@@ -66,6 +66,7 @@ function createSchema(req, res, next) {
 }
 
 function bulkCreate(req, res, next) {
+  //console.log('**************** bulkCreate controller', req.body);
   const { tenant, passwordHash } = req.user;
   accountService
     .bulkCreate(req.body, tenant, passwordHash)

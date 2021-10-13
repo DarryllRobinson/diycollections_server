@@ -1,20 +1,34 @@
-const db = require('../helpers/db');
+const tenantdb = require('../helpers/tenant.db');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { QueryTypes } = require('sequelize');
 
 const sendEmail = require('../helpers/send-email');
 
 module.exports = {
-  getAll,
+  getAllByCustomer,
   getById,
   saveNewInvoice,
   verifyInvoice,
 };
 
-async function getAll() {
+async function connectDB(user, password, db) {
+  const sequelize = await tenantdb.connect(user, password);
+  return require(`../${db}s/${db}.model`)(sequelize);
+}
+
+async function getAllByCustomer(customerRefNo, user, password) {
   try {
-    const invoices = await db.Invoice.findAll();
+    const sequelize = await tenantdb.connect(user, password);
+    const invoices = await sequelize.query(
+      `SELECT created, invoiceLocation, invoiceToken, invoices.totalBalance, viewed,
+      paymentTermDays, datePaid
+    FROM invoices, accounts
+    WHERE invoices.f_customerRefNo = accounts.f_customerRefNo
+    AND invoices.f_customerRefNo = "${customerRefNo}"`,
+      { type: QueryTypes.SELECT }
+    );
     return invoices.map((invoice) => getAllDetails(invoice));
   } catch (err) {
     console.error(err);
@@ -36,8 +50,24 @@ async function getById(id) {
 }
 
 function getAllDetails(invoice) {
-  const { customerRefNo, viewed } = invoice;
-  return { customerRefNo, viewed };
+  const {
+    created,
+    invoiceLocation,
+    invoiceToken,
+    totalBalance,
+    viewed,
+    paymentTermDays,
+    datePaid,
+  } = invoice;
+  return {
+    created,
+    invoiceLocation,
+    invoiceToken,
+    totalBalance,
+    viewed,
+    paymentTermDays,
+    datePaid,
+  };
 }
 
 async function saveNewInvoice(invoiceLocation, customerRefNo) {
@@ -74,19 +104,19 @@ async function sendInvoice(invoice) {
   let link;
   switch (process.env.REACT_APP_STAGE) {
     case 'development':
-      link = `http://localhost:3000/invoices/view-invoice?token=${invoice.invoiceToken}`;
+      link = `http://localhost:3000/customer/view-invoice?token=${invoice.invoiceToken}`;
       break;
     case 'sit':
-      link = `https://sit.thesystem.co.za/invoices/view-invoice?token=${invoice.invoiceToken}`;
+      link = `https://sit.thesystem.co.za/customer/view-invoice?token=${invoice.invoiceToken}`;
 
     case 'uat':
-      link = `https://sit.thesystem.co.za/invoices/view-invoice?token=${invoice.invoiceToken}`;
+      link = `https://sit.thesystem.co.za/customer/view-invoice?token=${invoice.invoiceToken}`;
 
     case 'production':
-      link = `https://thesystem.co.za/invoices/view-invoice?token=${invoice.invoiceToken}`;
+      link = `https://thesystem.co.za/customer/view-invoice?token=${invoice.invoiceToken}`;
 
     default:
-      link = `http://localhost:3000/invoices/view-invoice?token=${invoice.invoiceToken}`;
+      link = `http://localhost:3000/customer/view-invoice?token=${invoice.invoiceToken}`;
   }
 
   const client = 'MIE';

@@ -10,7 +10,6 @@ function model(sequelize) {
     passwordHash: { type: DataTypes.STRING, allowNull: false },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
-    f_clientId: { type: DataTypes.INTEGER, allowNull: false },
   };
 
   /*const options = {

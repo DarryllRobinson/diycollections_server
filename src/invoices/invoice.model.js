@@ -14,6 +14,7 @@ function model(sequelize) {
     },
     invoiceLocation: { type: DataTypes.STRING },
     totalBalance: { type: DataTypes.DECIMAL(10, 2), allowNull: true },
+    datePaid: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
     created: {
       type: DataTypes.DATE,
       allowNull: false,

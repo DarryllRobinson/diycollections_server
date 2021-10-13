@@ -1,4 +1,5 @@
 const tenantdb = require('../helpers/tenant.db');
+const { QueryTypes } = require('sequelize');
 
 module.exports = {
   getAll,
@@ -32,8 +33,13 @@ async function getById(id, user, password) {
 
 async function getCustomerInvoices(user, password) {
   //const customerInvoices = await db.Customer.findAll();
-  const db = await connectDB(user, password, 'customer');
-  const customerInvoices = await db.Customer.findAll({
+  const sequelize = await tenantdb.connect(user, password);
+  const customerInvoices = await sequelize.query(
+    `SELECT customerRefNo, customerName, viewed, totalBalance
+    FROM customers, invoices
+    WHERE customerRefNo = f_customerRefNo`,
+    { type: QueryTypes.SELECT }
+    /*db.findAll({
     attributes: ['customerRefNo', 'customerName'],
     include: [
       {
@@ -41,9 +47,10 @@ async function getCustomerInvoices(user, password) {
         attributes: ['hasViewed', 'viewed', 'totalBalance'],
       },
     ],
-  });
+  });*/
+  );
   //console.log('customerInvoices done: ', JSON.stringify(customerInvoices));
-  return customerInvoices.map((x) => customerInvoicesDetails(x));
+  return customerInvoices; //.map((x) => customerInvoicesDetails(x));
 }
 
 function customerInvoicesDetails(invoice) {
@@ -67,10 +74,11 @@ function customerInvoicesDetails(invoice) {
 async function bulkCreate(params, user, password) {
   // Count existing rows to be able to count number of affected rows
   const db = await connectDB(user, password, 'customer');
-  const existingRows = await db.count({ distinct: 'customerName' });
-
-  await db.Customer.bulkCreate(params);
-  const totalRows = await db.count({ distinct: 'customerName' });
+  //console.log('**************** bulkCreate', params);
+  const existingRows = await db.count({ distinct: 'customerRefNo' });
+  //console.log('**************** bulkCreate', existingRows);
+  await db.bulkCreate(params);
+  const totalRows = await db.count({ distinct: 'customerRefNo' });
 
   return totalRows - existingRows;
 }

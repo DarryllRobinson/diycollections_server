@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 
 // routes
-router.get('/', authorise(), getAll);
+router.get('/:customerRefNo', authorise(), getAllByCustomer);
 router.post('/verify-invoice', verifyInvoiceSchema, verifyInvoice);
 router.post('/document/', authorise(), getDocumentByLocation);
 router.post('/u-document/', getDocumentByLocation);
@@ -22,20 +22,24 @@ router.delete('/:id', authorise(), _delete);
 
 module.exports = router;
 
-function getAll(req, res, next) {
+function getAllByCustomer(req, res, next) {
+  const { tenant, passwordHash } = req.user;
+  const { customerRefNo } = req.params;
+  console.log('getAllByCustomer customerRefNo:', customerRefNo);
   invoiceService
-    .getAll()
+    .getAllByCustomer(customerRefNo, tenant, passwordHash)
     .then((invoices) => res.json(invoices))
     .catch(next);
 }
 
 function getDocumentByLocation(req, res, next) {
-  //console.log('req.body', req.body);
+  //console.log('********** getDocumentByLocation req.body', req.body);
   const { location } = req.body;
-  //console.log('location: ', location);
+  console.log('location: ', location);
   //const fileName = filepath + 'First_Customer.pdf';
   fs.readFile(location, (err, data) => {
     if (err) res.status(500).send(err);
+    console.log('data: ', data);
     res
       .contentType('application/pdf')
       .send(
