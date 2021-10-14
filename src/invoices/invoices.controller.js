@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const cors = require('cors');
 const Joi = require('joi');
 const validateRequest = require('../middleware/validate-request');
 const authorise = require('../middleware/authorise');
@@ -8,7 +7,6 @@ const Role = require('../helpers/role');
 const invoiceService = require('./invoice.service');
 
 const fs = require('fs');
-const path = require('path');
 
 // routes
 router.get('/:customerRefNo', authorise(), getAllByCustomer);

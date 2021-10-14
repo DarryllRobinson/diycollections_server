@@ -32,6 +32,9 @@ app.use('/api/invoices', require('./invoices/invoices.controller'));
 app.use('/api/outcomes', require('./outcomes/outcomes.controller'));
 app.use('/api/queues', require('./queues/queues.controller'));
 
+// Infor fetch route
+app.use('/api/infor', require('./crons/infor.controller'));
+
 // Report routes
 app.use('/api/reports', require('./reports/reports.controller'));
 
