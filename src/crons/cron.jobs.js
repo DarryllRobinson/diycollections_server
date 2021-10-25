@@ -15,7 +15,7 @@ const inforService = require('./infor.controller');
 //Steps are also permitted after an asterisk, so if you want to say “every two minutes”, just use */2
 
 unlockCollections();
-fetchInfor();
+//fetchInfor();
 
 function unlockCollections() {
   cron.schedule('*/15 * * * *', () => {

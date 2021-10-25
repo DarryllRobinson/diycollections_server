@@ -40,6 +40,7 @@ function getDocumentByLocation(req, res, next) {
     console.log('data: ', data);
     res
       .contentType('application/pdf')
+      //.contentLength(Buffer.byteLength(data))
       .send(
         `data:application/pdf;base64,${new Buffer.from(data).toString(
           'base64'
