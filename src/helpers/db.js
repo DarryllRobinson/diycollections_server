@@ -72,6 +72,7 @@ async function initialize() {
   db.Customer = require('../customers/customer.model')(sequelize);
   db.Invoice = require('../invoices/invoice.model')(sequelize);
   db.Outcome = require('../outcomes/outcome.model')(sequelize);
+  db.Mapping = require('../mappings/mapping.model')(sequelize);
 
   // define relationships
   // add relationships for clients, customers, accounts, contacts, cases and outcomes
@@ -89,6 +90,14 @@ async function initialize() {
   );
   db.User.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
   db.RefreshToken.belongsTo(db.User);
+
+  // Mapping integration
+  db.Client.hasOne(
+    db.Mapping,
+    { foreignKey: 'f_clientId' },
+    { onDelete: 'CASCADE' }
+  );
+  db.Mapping.belongsTo(db.Client);
 
   db.Customer.hasMany(
     db.Invoice,
@@ -151,11 +160,11 @@ async function initialize() {
   });
 
   // sync all models with database
-  /*await sequelize.sync();
+  await sequelize.sync();
 
   // create views
   // Accounts
-  await sequelize.query(`CREATE OR REPLACE VIEW accounts AS
+  /*await sequelize.query(`CREATE OR REPLACE VIEW accounts AS
     SELECT accountNumber, accountName, openDate, debtorAge, paymentTermDays, creditLimit, totalBalance, amountDue, currentBalance, days30, days60, days90, days120, days150, days180, days180Over, paymentMethod, paymentDueDate, debitOrderDate, lastPaymentDate, lastPaymentAmount, lastPTPDate, lastPTPAmount, accountNotes, accountStatus, arg, createdBy, updatedBy, f_customerRefNo, createdAt, updatedAt
     FROM tbl_accounts
     WHERE tenant = SUBSTRING_INDEX(USER(), '@', 1);`);

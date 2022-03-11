@@ -110,6 +110,7 @@ function registerSchema(req, res, next) {
     //confirmPassword: Joi.string().valid(Joi.ref('password')),
     role: Joi.string().required(),
     active: Joi.boolean().required(),
+    f_clientId: Joi.number().required(),
   });
   validateRequest(req, next, schema);
 }

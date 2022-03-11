@@ -52,6 +52,7 @@
     "pkg": "^5.3.1",
     "rootpath": "^0.1.2",
     "sequelize": "^6.6.5",
+    "stripe": "^8.184.0",
     "swagger-ui-express": "^4.1.6",
     "xml-js": "^1.6.11",
     "yamljs": "^0.3.0"

@@ -26,26 +26,36 @@ switch (process.env.REACT_APP_STAGE) {
 module.exports = { connect };
 
 async function connect(user, password) {
-  //console.log('connecting to tenant db');
-  const { host, port, database } = config;
-  const pool = await mysql.createPool({
-    connectionLimit: 100,
-    host,
-    port,
-    user,
-    password,
-  });
+  try {
+    //console.log('****************** connecting to tenant db: ', user, password);
+    const { host, port, database } = config;
+    const pool = await mysql.createPool({
+      connectionLimit: 100,
+      host,
+      port,
+      user,
+      password,
+    });
 
-  pool.getConnection((err, connection) => {
-    if (err) throw err;
-    //console.log('!!!!!!!!!!!!!!!!! tenant db connected as id ', connection.threadId);
-  });
+    pool.getConnection((err, connection) => {
+      if (err) throw err;
+      //console.log('!!!!!!!!!!!!!!!!! tenant db connected as id ', connection.threadId);
+    });
 
-  // connect to db
-  //console.log('connect to tenant db: ', database);
-  const sequelize = new Sequelize(database, user, password, {
-    dialect: 'mysql',
-    dialectOptions: { decimalNumbers: true },
-  });
-  return sequelize;
+    // connect to db
+    console.log(
+      '!!!!!!!!!!!!!!!!! connect to tenant db: ',
+      database,
+      user,
+      password
+    );
+    const sequelize = new Sequelize(database, user, password, {
+      dialect: 'mysql',
+      dialectOptions: { decimalNumbers: true },
+    });
+    return sequelize;
+  } catch (e) {
+    console.log('!@##@! Error connecting to database: ' + e.message);
+    return;
+  }
 }

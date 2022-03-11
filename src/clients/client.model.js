@@ -10,6 +10,7 @@ function model(sequelize) {
     passwordHash: { type: DataTypes.STRING, allowNull: false },
     createdBy: { type: DataTypes.STRING, allowNull: false },
     updatedBy: { type: DataTypes.STRING, allowNull: true },
+    // f_clientId was in the sql table as an INT and not null
   };
 
   /*const options = {

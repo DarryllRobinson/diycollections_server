@@ -32,7 +32,7 @@ async function getAll(user, password) {
     accountNumber, creditLimit, currentBalance, debtorAge, totalBalance,
     caseNotes, caseNumber, currentAssignment, currentStatus, nextVisitDateTime,
     resolution, cases.updatedAt, cases.updatedBy
-    FROM thesystem_db.customers, thesystem_db.accounts, thesystem_db.cases
+    FROM customers, accounts, cases
     WHERE customerRefNo = f_customerRefNo
     AND accountNumber = f_accountNumber`,
     { type: QueryTypes.SELECT }
@@ -41,6 +41,30 @@ async function getAll(user, password) {
 }
 
 async function getCollection(id, user, password) {
+  const sequelize = await tenantdb.connect(user, password);
+  const collection = await sequelize.query(
+    `SELECT caseNotes, caseNumber, currentAssignment, currentStatus, kamNotes,
+    nextVisitDateTime, resolution, cases.updatedBy,
+    amountDue, accountNotes, accountNumber, accountStatus, creditLimit, currentBalance,
+    days30, days60, days90, days120, days150, days180, days180Over,
+    debtorAge, debitOrderDate, lastPaymentAmount, lastPaymentAmount,
+    lastPTPAmount, lastPTPDate, paymentDueDate, totalBalance
+    representativeName, representativeNumber,
+    customerEntity, customerName, regIdNumber, regIdStatus
+    FROM customers
+    LEFT JOIN accounts
+    ON customerRefNo = f_customerRefNo
+    LEFT JOIN cases
+    ON accountNumber = f_accountNumber
+    LEFT JOIN contacts
+    ON contacts.f_accountNumber = accounts.accountNumber
+    AND cases.caseNumber = ${id}`,
+    { type: QueryTypes.SELECT }
+  );
+  return collectionFields(collection);
+}
+
+async function dddgetCollection(id, user, password) {
   const sequelize = await tenantdb.connect(user, password);
   const collection = await sequelize.query(
     `SELECT caseNotes, caseNumber, currentAssignment, currentStatus, kamNotes,
@@ -271,7 +295,7 @@ function collectionsFields(collection) {
 }
 
 function collectionFields(collection) {
-  //console.log('************** collection: ' + JSON.stringify(collection));
+  console.log('************** collection: ' + JSON.stringify(collection));
   const [
     {
       caseNotes,
