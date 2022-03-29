@@ -33,7 +33,22 @@ function getById(req, res, next) {
 }
 
 function createSchema(req, res, next) {
+  console.log(
+    '********************************** createSchema: ',
+    JSON.stringify(req.body)
+  );
+
   const schema = Joi.object({
+    table: Joi.string(),
+    db_field: Joi.string(),
+    web_field: Joi.string(),
+    createdAt: Joi.string(),
+    createdBy: Joi.string(),
+    updatedBy: Joi.string(),
+    tenant: Joi.string(),
+  });
+
+  const old_schema = Joi.object({
     primaryMappingName: Joi.string(),
     primaryMappingNumber: Joi.string(),
     primaryMappingEmail: Joi.string(),
@@ -94,7 +109,39 @@ function create(req, res, next) {
 }
 
 function updateSchema(req, res, next) {
+  console.log('updateSchema: ', req.body);
   const schema = Joi.object({
+    // accounts
+    accountNumber: Joi.string(),
+    accountName: Joi.string(),
+    openDate: Joi.date(),
+    debtorAge: Joi.number(),
+    paymentTermDays: Joi.number(),
+    creditLimit: Joi.number().precision(2),
+    totalBalance: Joi.number().precision(2),
+    amountDue: Joi.number().precision(2),
+    currentBalance: Joi.number().precision(2),
+    days30: Joi.number().precision(2),
+    days60: Joi.number().precision(2),
+    days90: Joi.number().precision(2),
+    days120: Joi.number().precision(2),
+    days150: Joi.number().precision(2),
+    days180: Joi.number().precision(2),
+    days180Over: Joi.number().precision(2),
+    paymentMethod: Joi.string(),
+    paymentDueDate: Joi.number().precision(2),
+    debitOrderDate: Joi.number().precision(2),
+    lastPaymentDate: Joi.date(),
+    lastPaymentAmount: Joi.number().precision(2),
+    lastPTPDate: Joi.date(),
+    lastPTPAmount: Joi.number().precision(2),
+    accountNotes: Joi.string(),
+    accountStatus: Joi.string(),
+    arg: Joi.string(),
+    createdBy: Joi.string(),
+    updatedBy: Joi.string(),
+
+    // contacts
     primaryMappingName: Joi.string(),
     primaryMappingNumber: Joi.string(),
     primaryMappingEmail: Joi.string(),
@@ -137,6 +184,7 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+  console.log('update: ', req.body);
   const { tenant, passwordHash } = req.user;
   mappingService
     .update(req.params.id, req.body, tenant, passwordHash)
