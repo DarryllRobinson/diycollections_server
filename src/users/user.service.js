@@ -226,10 +226,20 @@ async function create(params) {
   }
 
   const user = new db.User(params);
-  user.verified = Date.now();
 
-  // hash password
-  user.passwordHash = await hash(params.password);
+  // first registered user is an admin and password is set at the time of registration
+  // Second user and onwards must have their password set via an email link
+  const isFirstUser = (await db.User.count()) === 0;
+
+  if (isFirstUser) {
+    user.role = Role.Admin;
+    user.verificationToken = randomTokenString();
+  } else {
+    user.verified = Date.now();
+
+    // hash password
+    user.passwordHash = await hash(params.password);
+  }
 
   // save user
   await user.save();
