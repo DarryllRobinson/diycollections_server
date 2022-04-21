@@ -14,6 +14,7 @@ async function connectDB(user, password, db) {
 }
 
 async function getAging(user, password) {
+  console.log('getAging service', user, password);
   const db = await connectDB(user, password, 'account');
   const reports = await db.findAll({
     attributes: [

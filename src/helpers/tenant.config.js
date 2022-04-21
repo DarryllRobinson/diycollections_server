@@ -1,10 +1,12 @@
 const devConfig = {
   host: 'localhost',
-  //user: 'tentant1',
+  //host: '127.0.0.1',
+  user: 'tentant1',
   port: '3306',
-  //password: 'aaa',
+  password: 'aaa',
   database: 'thesystem_db',
   //database: 'thesystem_dev',
+  socketPath: '/tmp/mysql.sock',
 };
 
 const prodConfig = {

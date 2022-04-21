@@ -27,19 +27,23 @@ module.exports = { connect };
 
 async function connect(user, password) {
   try {
-    //console.log('****************** connecting to tenant db: ', user, password);
-    const { host, port, database } = config;
+    console.log('****************** connecting to tenant db: ', user, password);
+    const { host, port, database, socketPath } = config;
     const pool = await mysql.createPool({
       connectionLimit: 100,
       host,
       port,
       user,
       password,
+      socketPath,
     });
 
     pool.getConnection((err, connection) => {
       if (err) throw err;
-      //console.log('!!!!!!!!!!!!!!!!! tenant db connected as id ', connection.threadId);
+      console.log(
+        '!!!!!!!!!!!!!!!!! tenant db connected as id ',
+        connection.threadId
+      );
     });
 
     // connect to db
@@ -49,10 +53,19 @@ async function connect(user, password) {
       user,
       password
     );
-    const sequelize = new Sequelize(database, user, password, {
-      dialect: 'mysql',
-      dialectOptions: { decimalNumbers: true },
-    });
+    const sequelize = new Sequelize(
+      database,
+      user,
+      password,
+      {
+        dialect: 'mysql',
+        dialectOptions: { decimalNumbers: true, socketPath },
+      },
+      function (err, results) {
+        if (err) throw err;
+        console.log('result', results);
+      }
+    );
     return sequelize;
   } catch (e) {
     console.log('!@##@! Error connecting to database: ' + e.message);

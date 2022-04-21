@@ -28,6 +28,7 @@ module.exports = {
 };
 
 async function authenticate({ email, password, ipAddress }) {
+  console.log('User authenticate', email, password, ipAddress);
   const user = await db.User.scope('withHash').findOne({
     where: { email },
   });
@@ -119,6 +120,11 @@ async function revokeToken({ token, ipAddress }) {
 }
 
 async function register(params, origin) {
+  // check if first user
+  const isFirstUser = (await db.User.count()) === 0;
+  console.log('--------------------------------isFirstUser', isFirstUser);
+
+  /*
   // validate
   if (await db.User.findOne({ where: { email: params.email } })) {
     // send already registered error in email to prevent user enumeration
@@ -134,7 +140,7 @@ async function register(params, origin) {
   await user.save();
 
   // send email
-  await sendVerificationEmail(user, origin);
+  await sendVerificationEmail(user, origin);*/
   return true;
 }
 

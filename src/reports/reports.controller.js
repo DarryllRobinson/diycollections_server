@@ -11,7 +11,7 @@ router.get('/datePTP', authorise(), getDatePTP);
 module.exports = router;
 
 function getAging(req, res, next) {
-  //console.log('getAging', req.user);
+  console.log('getAging', req.user);
   const { tenant, passwordHash } = req.user;
   reportService
     .getAging(tenant, passwordHash)

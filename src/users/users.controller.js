@@ -39,18 +39,6 @@ function authenticateSchema(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-function workingauthenticate(req, res, next) {
-  const { email, password } = req.body;
-  const ipAddress = req.ip;
-  userService
-    .authenticate({ email, password, ipAddress })
-    .then(({ refreshToken, ...user }) => {
-      setTokenCookie(res, refreshToken);
-      res.json(user);
-    })
-    .catch(next);
-}
-
 function authenticate(req, res, next) {
   const { email, password } = req.body;
   const ipAddress = req.ip;
