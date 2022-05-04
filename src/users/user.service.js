@@ -28,7 +28,7 @@ module.exports = {
 };
 
 async function authenticate({ email, password, ipAddress }) {
-  console.log('User authenticate', email, password, ipAddress);
+  //console.log('User authenticate', email, password, ipAddress);
   const user = await db.User.scope('withHash').findOne({
     where: { email },
   });

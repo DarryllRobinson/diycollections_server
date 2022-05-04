@@ -27,7 +27,7 @@ module.exports = { connect };
 
 async function connect(user, password) {
   try {
-    console.log('****************** connecting to tenant db: ', user, password);
+    //console.log('****************** connecting to tenant db: ', user, password);
     const { host, port, database, socketPath } = config;
     const pool = await mysql.createPool({
       connectionLimit: 100,
@@ -40,19 +40,11 @@ async function connect(user, password) {
 
     pool.getConnection((err, connection) => {
       if (err) throw err;
-      console.log(
-        '!!!!!!!!!!!!!!!!! tenant db connected as id ',
-        connection.threadId
-      );
+      //console.log('!!!!!!!!!!!!!!!!! tenant db connected as id ', connection.threadId);
     });
 
     // connect to db
-    console.log(
-      '!!!!!!!!!!!!!!!!! connect to tenant db: ',
-      database,
-      user,
-      password
-    );
+    //console.log('!!!!!!!!!!!!!!!!! connect to tenant db: ', database, user, password);
     const sequelize = new Sequelize(
       database,
       user,

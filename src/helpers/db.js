@@ -65,14 +65,7 @@ async function initialize() {
   const { host, port, user, password, database, socketPath } = config;
 
   // connect to db
-  console.log(
-    '!!!!!!!!!!!!!!!!! connect to db:',
-    host,
-    port,
-    user,
-    password,
-    database
-  );
+  //console.log('!!!!!!!!!!!!!!!!! connect to db:', host, port, user, password, database);
 
   const connection = mysql.createConnection({
     host,
@@ -92,9 +85,9 @@ async function initialize() {
   await connection.execute(
     `CREATE DATABASE IF NOT EXISTS \`${database}\`;`,
     async function (err, results, fields) {
-      console.log('just tried to create database');
+      //console.log('just tried to create database');
       if (err) console.log('err: ', err); // results contains rows returned by server
-      console.log('results: ', results);
+      //console.log('results: ', results);
       //console.log('fields: ', fields);
 
       const sequelize = await initSequelize(
