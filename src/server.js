@@ -4,6 +4,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const morgan = require('morgan');
+
 const errorHandler = require('./middleware/error-handler');
 //const cronJobs = require('./crons/cron.jobs');
 //const cronInvoices = require('./crons/cron.invoices');
@@ -23,6 +25,9 @@ app.use(
     credentials: true,
   })
 );
+
+// turn on logging using morgan
+app.use(morgan('dev'));
 
 // api routes
 app.use('/api/accounts', require('./accounts/accounts.controller'));
