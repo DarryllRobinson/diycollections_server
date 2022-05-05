@@ -4,10 +4,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const morgan = require('morgan');
+//const morgan = require('morgan');
+const expressWinston = require('express-winston');
+const winston = require('winston');
 
+//const logger = require('./middleware/logger-handlers');
 const errorHandler = require('./middleware/error-handler');
-//const cronJobs = require('./crons/cron.jobs');
+const cronJobs = require('./crons/cron.jobs');
 //const cronInvoices = require('./crons/cron.invoices');
 
 //const mappings = require('./middleware/mapping');
@@ -26,8 +29,25 @@ app.use(
   })
 );
 
-// turn on logging using morgan
-app.use(morgan('dev'));
+// turn on http request logging using morgan
+//app.use(morgan('dev'));
+//console.log('%$%$%$%$$%$%$%$ logger ', logger.successHandler());
+app.use(
+  expressWinston.logger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.json()
+    ),
+    meta: false,
+    msg: 'HTTP  ',
+    expressFormat: true,
+    colorize: false,
+    ignoreRoute: function (req, res) {
+      return false;
+    },
+  })
+);
 
 // api routes
 app.use('/api/accounts', require('./accounts/accounts.controller'));

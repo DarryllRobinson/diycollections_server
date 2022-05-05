@@ -5,6 +5,7 @@ const convert = require('xml-js');
 
 const db = require('../helpers/db');
 const inforService = require('./infor.controller');
+const mysqlBackup = require('./cron.mysql.backup');
 
 // Schedule for cron jobs
 // second (optional) | minute | hour | day of month | month | day of week
@@ -16,6 +17,7 @@ const inforService = require('./infor.controller');
 
 unlockCollections();
 //fetchInfor();
+mysqlBackup();
 
 function unlockCollections() {
   cron.schedule('*/15 * * * *', () => {
