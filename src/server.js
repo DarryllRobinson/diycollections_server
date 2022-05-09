@@ -10,6 +10,7 @@ const winston = require('winston');
 
 //const logger = require('./middleware/logger-handlers');
 const errorHandler = require('./middleware/error-handler');
+const loggerHandler = require('./middleware/logger-handler');
 const cronJobs = require('./crons/cron.jobs');
 //const cronInvoices = require('./crons/cron.invoices');
 
@@ -32,7 +33,7 @@ app.use(
 // turn on http request logging using morgan
 //app.use(morgan('dev'));
 //console.log('%$%$%$%$$%$%$%$ logger ', logger.successHandler());
-app.use(
+/*app.use(
   expressWinston.logger({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
@@ -47,7 +48,8 @@ app.use(
       return false;
     },
   })
-);
+);*/
+app.use(loggerHandler);
 
 // api routes
 app.use('/api/accounts', require('./accounts/accounts.controller'));
