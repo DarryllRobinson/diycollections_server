@@ -1,11 +1,13 @@
 const tenantdb = require('../helpers/tenant.db');
 const { Op } = require('sequelize');
 const sequelize = require('sequelize');
+const { QueryTypes } = require('sequelize');
 
 module.exports = {
   getAging,
   getAgentPTP,
   getDatePTP,
+  getAgentActivity,
 };
 
 async function connectDB(user, password, db) {
@@ -54,6 +56,22 @@ async function getDatePTP(user, password) {
     group: 'ptpDate',
   });
   return reports;
+}
+
+async function getAgentActivity(user, password) {
+  const sequelize = await tenantdb.connect(user, password);
+  const activities = await sequelize.query(
+    `SELECT customerName, caseNumber, initialAssignment, outcomes.updatedAt, outcomeResolution, outcomeNotes
+    FROM customers, accounts, outcomes RIGHT JOIN cases
+    ON cases.caseNumber = outcomes.f_caseNumber
+    WHERE customers.customerRefNo = accounts.f_customerRefNo
+    AND cases.f_accountNumber = accounts.accountNumber
+    AND initialAssignment = 'darryll@thesystem.co.za'
+    AND (outcomes.updatedAt IS NULL OR outcomes.updatedAt > '2022-05-11 13:05:01');`,
+    { type: QueryTypes.SELECT }
+  );
+  console.log('__)_)_)_)_) activities: ', activities);
+  return activities;
 }
 
 function basicDetails(report) {
