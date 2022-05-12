@@ -33,7 +33,16 @@ function getDatePTP(req, res, next) {
   //console.log('getDatePTP', req.user);
   const { tenant, passwordHash } = req.user;
   reportService
-    .getDatePTP(tenant, passwordHash)
+    .getAgentActivity(tenant, passwordHash)
+    .then((reports) => res.json(reports))
+    .catch(next);
+}
+
+function getAgentActivity(req, res, next) {
+  //console.log('getDatePTP', req.user);
+  const { tenant, passwordHash } = req.user;
+  reportService
+    .getAgentActivity(tenant, passwordHash)
     .then((reports) => res.json(reports))
     .catch(next);
 }
