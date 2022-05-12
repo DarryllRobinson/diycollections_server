@@ -7,6 +7,7 @@ const reportService = require('./report.service');
 router.get('/aging', authorise(), getAging);
 router.get('/agentPTP', authorise(), getAgentPTP);
 router.get('/datePTP', authorise(), getDatePTP);
+router.get('/agentActivty', authorise(), getAgentActivty);
 
 module.exports = router;
 
