@@ -65,9 +65,7 @@ async function getAgentActivity(user, password) {
     FROM customers, accounts, outcomes RIGHT JOIN cases
     ON cases.caseNumber = outcomes.f_caseNumber
     WHERE customers.customerRefNo = accounts.f_customerRefNo
-    AND cases.f_accountNumber = accounts.accountNumber
-    AND initialAssignment = 'darryll@thesystem.co.za'
-    AND (outcomes.updatedAt IS NULL OR outcomes.updatedAt > '2022-05-11 13:05:01');`,
+    AND cases.f_accountNumber = accounts.accountNumber;`,
     { type: QueryTypes.SELECT }
   );
   console.log('__)_)_)_)_) activities: ', activities);
