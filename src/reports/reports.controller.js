@@ -7,7 +7,7 @@ const reportService = require('./report.service');
 router.get('/aging', authorise(), getAging);
 router.get('/agentPTP', authorise(), getAgentPTP);
 router.get('/datePTP', authorise(), getDatePTP);
-router.get('/agentActivty', authorise(), getAgentActivty);
+router.get('/agentActivty', authorise(), getAgentActivity);
 
 module.exports = router;
 
@@ -34,7 +34,7 @@ function getDatePTP(req, res, next) {
   //console.log('getDatePTP', req.user);
   const { tenant, passwordHash } = req.user;
   reportService
-    .getAgentActivity(tenant, passwordHash)
+    .getDatePTP(tenant, passwordHash)
     .then((reports) => res.json(reports))
     .catch(next);
 }
