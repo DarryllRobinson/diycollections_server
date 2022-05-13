@@ -7,12 +7,12 @@ const reportService = require('./report.service');
 router.get('/aging', authorise(), getAging);
 router.get('/agentPTP', authorise(), getAgentPTP);
 router.get('/datePTP', authorise(), getDatePTP);
-router.get('/agentActivty', authorise(), getAgentActivity);
+router.get('/agentActivity', authorise(), getAgentActivity);
 
 module.exports = router;
 
 function getAging(req, res, next) {
-  console.log('getAging', req.user);
+  //console.log('getAging', req.user);
   const { tenant, passwordHash } = req.user;
   reportService
     .getAging(tenant, passwordHash)
@@ -22,7 +22,7 @@ function getAging(req, res, next) {
 }
 
 function getAgentPTP(req, res, next) {
-  console.log('getAgentPTP controller', req.user);
+  //console.log('getAgentPTP controller', req.user);
   const { tenant, passwordHash } = req.user;
   reportService
     .getAgentPTP(tenant, passwordHash)
@@ -40,7 +40,7 @@ function getDatePTP(req, res, next) {
 }
 
 function getAgentActivity(req, res, next) {
-  //console.log('getDatePTP', req.user);
+  //console.log('**********&&&&&&&&&&&&********** getAgentActivity controller');
   const { tenant, passwordHash } = req.user;
   reportService
     .getAgentActivity(tenant, passwordHash)

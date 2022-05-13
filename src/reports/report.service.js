@@ -33,6 +33,7 @@ async function getAging(user, password) {
 
   return reports;
 }
+
 async function getAgentPTP(user, password) {
   const db = await connectDB(user, password, 'outcome');
   const reports = await db.findAll({
@@ -68,7 +69,7 @@ async function getAgentActivity(user, password) {
     AND cases.f_accountNumber = accounts.accountNumber;`,
     { type: QueryTypes.SELECT }
   );
-  console.log('__)_)_)_)_) activities: ', activities);
+  //console.log('__)_)_)_)_) activities: ', activities);
   return activities;
 }
 
