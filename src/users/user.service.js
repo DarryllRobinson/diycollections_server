@@ -122,9 +122,8 @@ async function revokeToken({ token, ipAddress }) {
 async function register(params, origin) {
   // check if first user
   const isFirstUser = (await db.User.count()) === 0;
-  console.log('--------------------------------isFirstUser', isFirstUser);
+  //console.log('--------------------------------isFirstUser', isFirstUser);
 
-  /*
   // validate
   if (await db.User.findOne({ where: { email: params.email } })) {
     // send already registered error in email to prevent user enumeration
@@ -137,10 +136,11 @@ async function register(params, origin) {
   user.verificationToken = randomTokenString();
 
   // save user
+  //console.log('--------------------------------user', user);
   await user.save();
 
   // send email
-  await sendVerificationEmail(user, origin);*/
+  await sendVerificationEmail(user, origin);
   return true;
 }
 
