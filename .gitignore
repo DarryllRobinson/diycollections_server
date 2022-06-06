@@ -13,6 +13,9 @@ npm-debug.log*
 # Invoices
 /src/crons/invoices
 
+# Backups
+/src/crons/backups
+
 # Assets
 /src/assets
 
