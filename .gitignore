@@ -16,6 +16,9 @@ npm-debug.log*
 # Backups
 /src/crons/backups
 
+# Backups
+/src/crons/backups
+
 # Assets
 /src/assets
 
