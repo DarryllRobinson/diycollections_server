@@ -50,9 +50,10 @@ async function update(id, params, user, password) {
   const caseObject = await getCase(id, user, password);
 
   // copy params to case and save
-  console.log('******************************** update params: ', params);
+  //console.log('******************************** update params: ', params, user);
   Object.assign(caseObject, params);
   caseObject.updated = Date.now();
+  caseObject.tenant = user;
   await caseObject.save();
 
   return basicDetails(caseObject);

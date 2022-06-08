@@ -49,6 +49,7 @@ async function create(params, user, password) {
   }*/
 
   const outcome = new db(params);
+  outcome.tenant = user;
   //console.log('************************************ outcome: ', outcome);
 
   // save outcome
@@ -72,6 +73,7 @@ async function update(id, params, user, password) {
   // copy params to outcome and save
   Object.assign(outcome, params);
   outcome.updated = Date.now();
+  outcome.tenant = user;
   await outcome.save();
 
   return basicDetails(outcome);
