@@ -45,7 +45,7 @@
     "express-winston": "^4.2.0",
     "joi": "^17.4.0",
     "jsonwebtoken": "^9.0.0",
-    "morgan": "^1.10.0",
+    "morgan": "^1.10.1",
     "mysql2": "^3.9.8",
     "nice-invoice": "^1.0.8",
     "node-cron": "^3.0.0",
